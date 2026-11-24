@@ -98,7 +98,7 @@ Nada do conteúdo do usuário é persistido. O que existe:
 | Redis | `limite:bot:<AAAAMMDD>` → contador | expira em 24 h |
 | `dados/marcas.json` | base de referência de marcas | mantido à mão |
 | `dados/roteiros.json` | roteiros por tipo | revisado pela equipe |
-| `dados/openphish.txt` | feed comunitário do OpenPhish | atualizado por script |
+| `dados/openphish.json` | feed comunitário do OpenPhish (importado no bundle) | `npx tsx scripts/atualizar-openphish.ts` |
 | `avaliacao/casos.json` | casos sintéticos | mantido pela avaliação |
 
 ## Divisão de arquivos por frente
@@ -106,8 +106,8 @@ Nada do conteúdo do usuário é persistido. O que existe:
 | Frente | Arquivos |
 |---|---|
 | orquestrador | `src/nucleo/**`, `docs/**`, configuração do projeto, README, AGENTS.md |
-| `telegram` | `app/api/telegram/**`, `src/canais/telegram/**`, `src/limite/**`, `.env.example` |
-| `extracao-sintese` | `src/extracao/**`, `src/sintese/**` |
-| `sinais` | `src/sinais/**`, `dados/marcas.json`, `dados/openphish.txt`, `scripts/openphish.*` |
+| `telegram` | `app/api/telegram/**`, `src/canais/telegram/**`, `src/limite/**`, `scripts/configurar-webhook.ts`, `.env.example` |
+| `extracao-sintese` | `src/extracao/**`, `src/sintese/**`, `scripts/analisar-exemplo.ts` |
+| `sinais` | `src/sinais/**`, `dados/marcas.json`, `dados/openphish.json`, `scripts/atualizar-openphish.ts` |
 | `avaliacao` | `avaliacao/**` |
 | interface e experiência (equipe) | `dados/roteiros.json`, `app/page.tsx` e estilos da landing |

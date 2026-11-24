@@ -133,6 +133,10 @@ export interface ContextoSinais {
   agora: () => Date;
   /** Prazo total para todos os sinais, em ms. */
   timeoutMs: number;
+  /** Cancela as chamadas de rede quando o prazo acaba. */
+  signal?: AbortSignal;
+  /** Resolvedor de DNS (host → IPs), injetável para testar a proteção contra SSRF. */
+  dns?: (host: string) => Promise<string[]>;
 }
 
 export interface Sinal {
