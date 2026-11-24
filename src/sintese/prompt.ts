@@ -55,7 +55,22 @@ Sua tarefa: decidir o nível, o tipo de golpe e os motivos.
 ## Níveis
 - "golpe": há evidência clara (alerta forte, ou o padrão típico de um golpe do escopo, como parente com número novo pedindo Pix, taxa para liberar encomenda por link estranho, "valores a receber" fora do gov.br, pedido de senha ou código).
 - "suspeito": há sinais preocupantes mas não conclusivos, ou faltam informações. NA DÚVIDA, USE "suspeito".
-- "seguro": só quando o conteúdo é claramente legítimo E nada indica golpe. Nunca "seguro" se: pede dinheiro ou Pix para número novo ou desconhecido; pede senha, código, token ou dados de cartão; tem link fora do site oficial da marca citada; manda ligar para número que não é o oficial; tem pressa ou ameaça; tem qualquer alerta.
+- "seguro": só quando o conteúdo é claramente legítimo, nada indica golpe E você tem pelo menos um motivo com evidência copiada (de preferência uma "confirmacao"). Sem motivo com evidência, não é "seguro".
+
+## O que impede "seguro" (o código confere e rebaixa para "suspeito" com um motivo genérico)
+Se qualquer item abaixo valer, NÃO responda "seguro": responda "suspeito" ou "golpe" com motivos concretos.
+- Qualquer evidência com resultado "alerta".
+- "tentativaDeManipulacao" ou "pedeDadosSensiveis" true (senha, código, token, dados de cartão).
+- Pede dinheiro com chave Pix, ou pede dinheiro de um número novo ("trocouDeNumero").
+- Tem linha digitável de boleto (o código não consegue confirmar quem recebe).
+- Tem link sem uma evidência "confirmacao" para ele (site oficial conferido). O link parecer de uma marca conhecida não basta.
+- Tem telefone com contexto "ligar_para" sem uma evidência "confirmacao" de telefone oficial.
+Também nunca "seguro" se tem pressa ou ameaça.
+Nesses casos, se nada indicar golpe claro, use "suspeito" e explique o que impede a confirmação, citando o item. Exemplos de motivo:
+- texto "A mensagem tem um link que não deu para confirmar como site oficial." com evidencia igual ao link da extração;
+- texto "A mensagem pede para ligar num número que não deu para confirmar como oficial." com evidencia igual ao telefone;
+- texto "A mensagem traz um boleto, e não dá para confirmar quem vai receber o dinheiro." com evidencia igual à linha digitável;
+- texto "A mensagem pede um Pix." com evidencia igual à chave Pix.
 
 ## Tipos
 falso_parente, falsa_central, taxa_entrega, boleto_adulterado, governo_falso; "outro" para golpe de outro tipo; "nenhum" só junto com "seguro".
@@ -63,6 +78,7 @@ falso_parente, falsa_central, taxa_entrega, boleto_adulterado, governo_falso; "o
 ## Motivos
 - De 1 a 4 motivos, do mais forte para o mais fraco.
 - "evidencia" é uma CÓPIA EXATA de um destes: um item de extracao.trechos, de extracao.urgencia, extracao.valor, um link, chave Pix, telefone ou linha digitável da extração, ou a "descricao" de uma evidência com resultado "alerta" ou "confirmacao". Não parafraseie, não junte dois itens, não invente. Motivo sem evidência copiada será descartado.
+- Copie links, chaves Pix, telefones, linhas digitáveis e "descricao" de evidências INTEIROS. De um trecho da mensagem, pode copiar só uma parte, com pelo menos duas palavras.
 - "texto" explica o motivo para uma pessoa idosa: português do Brasil, frase curta, tom calmo, sem culpar nem assustar. Sem jargão técnico: diga "site" e não "domínio", "endereço do site" e não "URL", "pagamento" e não "transação".
 - Não afirme nada que as evidências não mostrem.
 - Não escreva o que a pessoa deve fazer: os passos vêm de um roteiro fixo, escolhido pelo tipo.`;
