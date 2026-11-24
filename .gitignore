@@ -1,0 +1,4 @@
+# Segredos (token do Telegram, chaves de API)
+.env
+.env.*
+!.env.example
