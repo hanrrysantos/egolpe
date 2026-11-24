@@ -1,0 +1,93 @@
+[
+  {
+    "tipo": "falso_parente",
+    "revisado": false,
+    "antes": [
+      "Não faça o Pix.",
+      "Ligue para o número antigo do seu parente e confirme com ele, por voz.",
+      "Se não conseguir falar com ele, pergunte algo que só ele saberia responder.",
+      "Não salve o número novo até ter certeza de quem é."
+    ],
+    "depois": [
+      "Ligue agora para o seu banco pelo número do verso do cartão.",
+      "Diga que caiu num golpe e peça a devolução do Pix pelo MED (Mecanismo Especial de Devolução). Quanto mais rápido, maior a chance.",
+      "Registre um boletim de ocorrência. Dá para fazer pela internet, na delegacia virtual do seu estado.",
+      "Avise o seu parente e a família: o golpista pode tentar com outras pessoas."
+    ]
+  },
+  {
+    "tipo": "falsa_central",
+    "revisado": false,
+    "antes": [
+      "Não ligue para o número da mensagem.",
+      "Se quiser confirmar, ligue para o banco pelo número do verso do seu cartão ou abra o aplicativo do banco.",
+      "O banco nunca pede senha, código por SMS nem que você transfira dinheiro para uma \"conta segura\"."
+    ],
+    "depois": [
+      "Desligue e ligue para o seu banco pelo número do verso do cartão.",
+      "Se passou senha ou código, peça o bloqueio do cartão e da conta e troque as senhas.",
+      "Se fez Pix ou transferência, peça a devolução pelo MED (Mecanismo Especial de Devolução).",
+      "Registre um boletim de ocorrência, pela internet, na delegacia virtual do seu estado."
+    ]
+  },
+  {
+    "tipo": "taxa_entrega",
+    "revisado": false,
+    "antes": [
+      "Não pague a taxa e não clique no link.",
+      "Confira a entrega só pelo site ou aplicativo oficial da loja ou dos Correios, digitando o endereço você mesmo.",
+      "Os Correios não cobram taxa por SMS ou WhatsApp."
+    ],
+    "depois": [
+      "Se pagou com cartão, ligue para o banco pelo número do verso do cartão e peça o bloqueio e a contestação da compra.",
+      "Se pagou por Pix, peça ao banco a devolução pelo MED (Mecanismo Especial de Devolução).",
+      "Se digitou senha ou dados do cartão no site, troque a senha e bloqueie o cartão.",
+      "Registre um boletim de ocorrência, pela internet, na delegacia virtual do seu estado."
+    ]
+  },
+  {
+    "tipo": "boleto_adulterado",
+    "revisado": false,
+    "antes": [
+      "Não pague este boleto ainda.",
+      "Peça a segunda via direto no site ou aplicativo oficial de quem cobra, ou ligue para o número que está na sua conta ou contrato.",
+      "Antes de pagar, confira se o nome de quem vai receber, no aplicativo do banco, é o da empresa certa."
+    ],
+    "depois": [
+      "Ligue para o seu banco pelo número do verso do cartão e conte o que aconteceu. Peça para tentar cancelar ou recuperar o pagamento.",
+      "Avise a empresa que você queria pagar, pelo canal oficial dela.",
+      "Guarde o boleto e o comprovante.",
+      "Registre um boletim de ocorrência, pela internet, na delegacia virtual do seu estado."
+    ]
+  },
+  {
+    "tipo": "governo_falso",
+    "revisado": false,
+    "antes": [
+      "Não clique no link e não pague nenhuma taxa.",
+      "O governo não cobra taxa para liberar dinheiro ou benefício.",
+      "Para consultar valores a receber ou benefícios, entre você mesmo no site gov.br ou no aplicativo oficial (Meu INSS, por exemplo)."
+    ],
+    "depois": [
+      "Se pagou alguma taxa por Pix, ligue para o seu banco pelo número do verso do cartão e peça a devolução pelo MED (Mecanismo Especial de Devolução).",
+      "Se digitou a senha do gov.br, troque a senha agora pelo site ou aplicativo oficial.",
+      "Se passou dados do cartão, peça ao banco o bloqueio do cartão.",
+      "Registre um boletim de ocorrência, pela internet, na delegacia virtual do seu estado."
+    ]
+  },
+  {
+    "tipo": "outro",
+    "revisado": false,
+    "antes": [
+      "Não faça nenhum Pix nem pagamento por enquanto.",
+      "Não clique em links da mensagem.",
+      "Confirme a história com a pessoa ou empresa por outro caminho: ligue para um número que você já conhece."
+    ],
+    "depois": [
+      "Ligue para o seu banco pelo número do verso do cartão e conte o que aconteceu.",
+      "Se fez Pix, peça a devolução pelo MED (Mecanismo Especial de Devolução).",
+      "Se digitou alguma senha, troque essa senha agora.",
+      "Registre um boletim de ocorrência, pela internet, na delegacia virtual do seu estado."
+    ]
+  }
+]

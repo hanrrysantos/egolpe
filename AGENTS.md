@@ -8,7 +8,7 @@ Guia para agentes de código (e pessoas) que trabalham neste repositório. Leia 
 
 ## Estado atual
 
-- O repositório ainda **não tem código**: só o README. Este arquivo descreve as regras que o código deve seguir quando for escrito.
+- Esqueleto em TypeScript com os tipos compartilhados em `src/nucleo/tipos.ts`. Contratos, fluxo e divisão de arquivos por frente: [`docs/modelagem.md`](docs/modelagem.md).
 - Decidido: canal Telegram (Bot API) e uma landing page estática que leva ao bot.
 - Modelo multimodal: candidatos Claude Haiku 5.5 (`claude-haiku-5-5`) e Claude Sonnet 5.5 (`claude-sonnet-5-5`); o vencedor sai do conjunto de avaliação.
 - **Áudio está fora do MVP.** Se o usuário mandar áudio, o bot responde que por enquanto só entende texto e print. Não implemente transcrição sem combinar com a equipe.
@@ -88,12 +88,31 @@ Falso parente ("troquei de número"), falsa central do banco (SMS ou mensagem qu
 - Métricas: acerto geral, golpes identificados como golpe, legítimas identificadas como seguras. Os resultados vão para a seção Avaliação do README.
 - Mudanças em prompts, modelo ou sinais devem ser medidas contra esse conjunto antes de entrar. Falso negativo (golpe marcado como seguro) é o erro mais grave.
 
+## Fluxo de trabalho com agentes
+
+O desenvolvimento usa o Claude Code com um **orquestrador** (a sessão principal, Opus) e **subagentes** definidos em `.claude/agents/`. O `CLAUDE.md` apenas importa este arquivo, para que as regras valham para todos.
+
+| Subagente | Frente | Modelo |
+|---|---|---|
+| `telegram` | Adaptador do Telegram, webhook, botões, limite no Redis | Sonnet |
+| `extracao-sintese` | Prompts, chamadas ao Claude, schemas, síntese do veredito | Opus |
+| `sinais` | Sinais determinísticos e base de referência de marcas | Sonnet |
+| `avaliacao` | Casos sintéticos, script e métricas de avaliação | Sonnet |
+| `revisor` | Revisão somente leitura antes de todo merge | Opus |
+
+Regras:
+- **O orquestrador** quebra o trabalho em tarefas, delega com contexto e critério de pronto, integra, roda os testes e faz commits e PRs. Ele é o único que altera os **tipos compartilhados** definidos na modelagem.
+- **Cada subagente** só altera os arquivos da sua frente. Se precisar mudar um contrato, propõe no relatório em vez de mudar.
+- **Paralelismo:** subagentes que trabalham ao mesmo tempo rodam em worktrees separados.
+- **Nada entra em `main`** sem passar pelo `revisor` e pelos testes.
+- **Cota:** a equipe usa plano de assinatura. Prefira poucas delegações bem definidas a muitas pequenas, e não rode a avaliação completa contra a API sem necessidade.
+
 ## Convenções
 
 - Conteúdo voltado ao usuário e documentação: português do Brasil.
-- Código: siga a convenção que a equipe definir no primeiro commit de código e registre aqui.
+- Código: TypeScript estrito; identificadores em português (`analisar`, `Evidencia`), sem acentos nos nomes; dados de usuário nunca em `console.log` (use `src/nucleo/log.ts`). Import absoluto com `@/` a partir da raiz.
 - Sinais determinísticos precisam de testes unitários com casos positivos e negativos.
-- Comandos de instalação, execução, testes e lint: _a definir quando houver código_. Ao criá-los, documente-os aqui e na seção "Rodando localmente" do README.
+- Comandos (Node 20+): `npm install`, `npm run dev` (Next.js local), `npm test` (Vitest, sem rede), `npm run typecheck` (tsc), `npm run build`, `npm run avaliar` (avaliação; chama a API paga). Mantenha esta lista igual à seção "Rodando localmente" do README.
 - Git: branches a partir de `main`; não commite direto em `main`.
 - Mensagens de commit seguem [Conventional Commits](https://www.conventionalcommits.org/pt-br/): `tipo(escopo opcional): descrição`, com a descrição em português, no imperativo e em minúsculas (ex.: `feat(sinais): adiciona consulta RDAP`, `fix(telegram): trata mensagem sem texto`, `docs: atualiza stack no README`). Tipos: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `ci`, `perf`, `style`, `build`. Mudança incompatível: `!` após o tipo e rodapé `BREAKING CHANGE:`.
 - Não adicione linhas de atribuição a ferramentas de IA (`Co-Authored-By`, "Generated with...") em commits ou PRs.
