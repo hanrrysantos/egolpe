@@ -10,7 +10,7 @@ export interface ArmazenamentoContador {
   incrementar(chave: string, expiraEmSegundos: number): Promise<number>;
 }
 
-export type MotivoBloqueio = "usuario" | "bot";
+export type MotivoBloqueio = "usuario" | "bot" | "indisponivel";
 
 export interface ResultadoLimite {
   permitido: boolean;
@@ -47,30 +47,52 @@ export interface DepsLimite {
   agora?: () => Date;
   /** Chamado com o nome do erro (nunca conteúdo) quando o Redis falha. */
   aoFalhar?: (erro: string) => void;
+  /** Padrão: VERCEL_ENV === "production". Em produção, sem Redis configurado, falha fechado. */
+  producao?: boolean;
+  /** Prazo de cada chamada ao Redis, em ms (padrão 3000). */
+  timeoutMs?: number;
+}
+
+const TIMEOUT_REDIS_MS = 3_000;
+
+function comPrazo<T>(p: Promise<T>, ms: number): Promise<T> {
+  let t: ReturnType<typeof setTimeout> | undefined;
+  const prazo = new Promise<never>((_, rej) => {
+    t = setTimeout(() => rej(new Error("redis_timeout")), ms);
+  });
+  return Promise.race([p, prazo]).finally(() => clearTimeout(t));
 }
 
 /**
  * Conta uma análise e diz se pode seguir.
  *
- * Escolha de projeto: se o Redis estiver fora do ar ou sem configuração, FAIL-OPEN
- * (deixa analisar). Para um bot de proteção contra golpes, negar ajuda por causa de
- * uma falha de infraestrutura é pior do que perder temporariamente o controle de
- * abuso; o custo fica limitado pelo teto de gastos da chave da API. A falha é
- * logada só como metadado.
+ * Escolha de projeto (duas regras):
+ * - Redis configurado, mas com erro TRANSITÓRIO (fora do ar, timeout): FAIL-OPEN.
+ *   Para um bot de proteção contra golpes, negar ajuda por causa de uma falha de
+ *   infraestrutura é pior do que perder temporariamente o controle de abuso; o custo
+ *   fica limitado pelo teto de gastos da chave da API.
+ * - Redis NÃO configurado em produção (VERCEL_ENV=production): FAIL-CLOSED. Os
+ *   limites são regra inviolável e isso é erro de configuração, não falha passageira;
+ *   o usuário recebe a orientação básica. Fora de produção (dev local) libera.
+ * A falha é logada só como metadado.
  */
 export async function verificarLimite(usuarioId: number, deps: DepsLimite): Promise<ResultadoLimite> {
   const agora = (deps.agora ?? (() => new Date()))();
   if (!deps.armazenamento) {
     deps.aoFalhar?.("redis_nao_configurado");
-    return { permitido: true };
+    const producao = deps.producao ?? process.env.VERCEL_ENV === "production";
+    return producao ? { permitido: false, motivo: "indisponivel" } : { permitido: true };
   }
   const chaves = chavesLimite(usuarioId, agora);
+  const armazenamento = deps.armazenamento;
+  const ms = deps.timeoutMs ?? TIMEOUT_REDIS_MS;
+  const incrementar = (chave: string, exp: number) => comPrazo(armazenamento.incrementar(chave, exp), ms);
   try {
-    const doUsuario = await deps.armazenamento.incrementar(chaves.usuario, 60 * 60);
+    const doUsuario = await incrementar(chaves.usuario, 60 * 60);
     if (doUsuario > LIMITE_POR_USUARIO_HORA) {
       return { permitido: false, motivo: "usuario", voltaEmMinutos: minutosAteFimDaHora(agora) };
     }
-    const doBot = await deps.armazenamento.incrementar(chaves.bot, 24 * 60 * 60);
+    const doBot = await incrementar(chaves.bot, 24 * 60 * 60);
     if (doBot > LIMITE_BOT_DIA) {
       return { permitido: false, motivo: "bot", voltaEmMinutos: minutosAteFimDoDia(agora) };
     }
@@ -96,6 +118,9 @@ export function criarArmazenamentoUpstash(): ArmazenamentoContador | null {
 }
 
 export function mensagemLimite(r: ResultadoLimite): string {
+  if (r.motivo === "indisponivel") {
+    return "O serviço está temporariamente indisponível e não consigo analisar agora.";
+  }
   const quando =
     r.voltaEmMinutos && r.voltaEmMinutos > 90
       ? `daqui a umas ${Math.ceil(r.voltaEmMinutos / 60)} horas`
