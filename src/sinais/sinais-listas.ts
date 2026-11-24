@@ -1,6 +1,7 @@
 import type { Evidencia, Sinal } from "@/src/nucleo/tipos";
 import openphishJson from "@/dados/openphish.json";
-import { resolverLinks, urlsParaVerificar, type ContextoInterno } from "./links";
+import { parse } from "tldts";
+import { urlsParaVerificar, type ResolvedorLinks } from "./links";
 import { nomeExibido } from "./sinais-dominio";
 
 export const FEED_OPENPHISH: string[] = openphishJson as unknown as string[];
@@ -8,13 +9,12 @@ export const FEED_OPENPHISH: string[] = openphishJson as unknown as string[];
 const ENDPOINT_SB = "https://safebrowsing.googleapis.com/v4/threatMatches:find";
 
 /** Só os links vão para o Google: nada da conversa. */
-export function criarSinalSafeBrowsing(chave: () => string | undefined = () => process.env.GOOGLE_SAFE_BROWSING_API_KEY): Sinal {
+export function criarSinalSafeBrowsing(resolverLinks: ResolvedorLinks, chave: () => string | undefined = () => process.env.GOOGLE_SAFE_BROWSING_API_KEY): Sinal {
   return {
     id: "safe_browsing",
     async verificar(extracao, ctx) {
       try {
-        const interno = ctx as ContextoInterno;
-        const urls = urlsParaVerificar(await resolverLinks(extracao, interno)).map((u) => u.href);
+        const urls = urlsParaVerificar(await resolverLinks(extracao, ctx)).map((u) => u.href);
         if (urls.length === 0) return [];
         const k = chave();
         const semResultado = (u: string): Evidencia => ({
@@ -29,7 +29,7 @@ export function criarSinalSafeBrowsing(chave: () => string | undefined = () => p
             method: "POST",
             redirect: "manual",
             headers: { "content-type": "application/json" },
-            signal: AbortSignal.any([AbortSignal.timeout(3000), ...(interno.signal ? [interno.signal] : [])]),
+            signal: AbortSignal.any([AbortSignal.timeout(3000), ...(ctx.signal ? [ctx.signal] : [])]),
             body: JSON.stringify({
               client: { clientId: "verificador-de-links", clientVersion: "1.0.0" },
               threatInfo: {
@@ -82,6 +82,22 @@ export function normalizarUrlLista(bruto: string): { url: string; host: string }
   }
 }
 
+/** Hosts em que qualquer pessoa publica conteúdo: casar só pelo host acusaria sites legítimos. */
+const HOSPEDAGEM_COMPARTILHADA = new Set([
+  "docs.google.com", "sites.google.com", "drive.google.com", "forms.gle", "forms.google.com", "storage.googleapis.com",
+  "firebaseapp.com", "web.app", "github.io", "githubusercontent.com", "vercel.app", "netlify.app", "pages.dev", "workers.dev",
+  "herokuapp.com", "blogspot.com", "wixsite.com", "weebly.com", "notion.site", "onrender.com", "glitch.me", "000webhostapp.com",
+  "typeform.com", "canva.com", "wordpress.com", "bit.ly", "amazonaws.com", "azurewebsites.net", "r2.dev",
+]);
+
+export function hostCompartilhado(host: string): boolean {
+  const h = host.toLowerCase().replace(/^www\./, "").replace(/\.$/, "");
+  const partes = h.split(".");
+  for (let i = 0; i < partes.length - 1; i++) if (HOSPEDAGEM_COMPARTILHADA.has(partes.slice(i).join("."))) return true;
+  const p = parse(h);
+  return p.isPrivate === true;
+}
+
 const indices = new WeakMap<string[], { urls: Set<string>; hosts: Set<string> }>();
 
 function indexar(feed: string[]) {
@@ -101,23 +117,24 @@ function indexar(feed: string[]) {
 }
 
 /** Feed comunitário do OpenPhish, consultado localmente. Ausência na lista não é prova de segurança. */
-export function criarSinalOpenPhish(feed: string[] = FEED_OPENPHISH): Sinal {
+export function criarSinalOpenPhish(resolverLinks: ResolvedorLinks, feed: string[] = FEED_OPENPHISH): Sinal {
   return {
     id: "openphish",
     async verificar(extracao, ctx) {
       try {
-        const urls = urlsParaVerificar(await resolverLinks(extracao, ctx as ContextoInterno));
+        const urls = urlsParaVerificar(await resolverLinks(extracao, ctx));
         if (urls.length === 0) return [];
         const idx = indexar(feed);
         return urls.map((u): Evidencia => {
           const n = normalizarUrlLista(u.href);
           const exata = !!n && idx.urls.has(n.url);
-          const host = !!n && idx.hosts.has(n.host);
+          const host = !!n && idx.hosts.has(n.host) && !hostCompartilhado(u.hostname);
           if (exata || host) {
             return {
               sinal: "openphish",
               resultado: "alerta",
-              forca: "forte",
+              // só o host casou (outro caminho do mesmo site): indício menor do que a URL exata
+              forca: exata ? "forte" : "moderada",
               alvo: u.href,
               descricao: `o site ${nomeExibido(u.hostname)} aparece numa lista pública de golpes (phishing)`,
               detalhes: { correspondencia: exata ? "url" : "host" },

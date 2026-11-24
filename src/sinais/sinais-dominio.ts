@@ -1,6 +1,6 @@
 import { getDomain } from "tldts";
 import type { Evidencia, Marca, Sinal } from "@/src/nucleo/tipos";
-import { ehEncurtador, resolverLinks, urlsParaVerificar, type ContextoInterno } from "./links";
+import { ehEncurtador, urlsParaVerificar, type ResolvedorLinks } from "./links";
 import { analisarHost, encontrarMarcaAlegada } from "./marcas";
 
 export function nomeExibido(host: string): string {
@@ -12,12 +12,12 @@ function dominioDe(host: string): string {
 }
 
 /** Sinal `link_encurtado`: para onde o link realmente leva. */
-export function criarSinalLinkEncurtado(): Sinal {
+export function criarSinalLinkEncurtado(resolverLinks: ResolvedorLinks): Sinal {
   return {
     id: "link_encurtado",
     async verificar(extracao, ctx) {
       try {
-        const links = await resolverLinks(extracao, ctx as ContextoInterno);
+        const links = await resolverLinks(extracao, ctx);
         const out: Evidencia[] = [];
         for (const l of links) {
           const origem = nomeExibido(l.original.hostname);
@@ -59,12 +59,12 @@ function marcaAlegada(extracao: { remetente?: { marca?: string } }, marcas: Marc
 }
 
 /** Sinal `dominio_oficial`: o link é do site oficial da marca? */
-export function criarSinalDominioOficial(marcas: Marca[]): Sinal {
+export function criarSinalDominioOficial(marcas: Marca[], resolverLinks: ResolvedorLinks): Sinal {
   return {
     id: "dominio_oficial",
     async verificar(extracao, ctx) {
       try {
-        const links = await resolverLinks(extracao, ctx as ContextoInterno);
+        const links = await resolverLinks(extracao, ctx);
         const alegada = marcaAlegada(extracao, marcas);
         const out: Evidencia[] = [];
         const vistos = new Set<string>();
@@ -113,12 +113,12 @@ export function criarSinalDominioOficial(marcas: Marca[]): Sinal {
 }
 
 /** Sinal `semelhanca_dominio`: o endereço imita o de uma marca conhecida? */
-export function criarSinalSemelhanca(marcas: Marca[]): Sinal {
+export function criarSinalSemelhanca(marcas: Marca[], resolverLinks: ResolvedorLinks): Sinal {
   return {
     id: "semelhanca_dominio",
     async verificar(extracao, ctx) {
       try {
-        const links = await resolverLinks(extracao, ctx as ContextoInterno);
+        const links = await resolverLinks(extracao, ctx);
         const alegada = marcaAlegada(extracao, marcas);
         const out: Evidencia[] = [];
         const vistos = new Set<string>();
