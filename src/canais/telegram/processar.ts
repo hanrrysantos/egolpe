@@ -20,23 +20,41 @@ import {
 } from "./formatar";
 import type { TgCallbackQuery, TgMensagem, TgUpdate } from "./tipos";
 
+/** Orçamento da função na Vercel (maxDuration da rota). */
+export const ORCAMENTO_TOTAL_MS = 60_000;
+/** Folga reservada para formatar e enviar o veredito. */
+export const FOLGA_RESPOSTA_MS = 8_000;
+/** Prazo mínimo para valer a pena analisar. */
+export const PRAZO_MINIMO_MS = 15_000;
+
+/** Prazo para o núcleo, ou null se não sobrar tempo suficiente. */
+export function calcularPrazoAnaliseMs(decorridoMs: number): number | null {
+  const prazo = ORCAMENTO_TOTAL_MS - decorridoMs - FOLGA_RESPOSTA_MS;
+  return prazo >= PRAZO_MINIMO_MS ? prazo : null;
+}
+
 export interface DepsProcessar {
   api: ApiTelegram;
-  analisar: (entrada: Entrada) => Promise<Veredito>;
+  analisar: (entrada: Entrada, opcoes: { timeoutMs: number }) => Promise<Veredito>;
   limite: (usuarioId: number) => Promise<ResultadoLimite>;
+  /** Instante (Date.now) em que o webhook começou a tratar a requisição. */
+  inicio?: number;
+  /** Relógio injetável (Date.now). */
+  agora?: () => number;
 }
 
 /** Dependências reais (produção). */
-export function depsPadrao(api: ApiTelegram, limite: DepsLimite): DepsProcessar {
+export function depsPadrao(api: ApiTelegram, limite: DepsLimite, inicio?: number): DepsProcessar {
   return {
     api,
-    analisar: (e) => analisarNucleo(e),
+    inicio,
+    analisar: (e, o) => analisarNucleo(e, { timeoutMs: o.timeoutMs }),
     limite: (id) => verificarLimite(id, limite),
   };
 }
 
 async function obterImagem(api: ApiTelegram, arq: ArquivoImagem): Promise<Imagem | null> {
-  const bytes = await api.baixarArquivo(arq.fileId);
+  const bytes = await api.baixarArquivo(arq.fileId, { tamanhoObrigatorio: arq.documento === true });
   if (!bytes || bytes.length === 0 || bytes.length > LIMITE_IMAGEM_BYTES) return null;
   return { mime: arq.mime, base64: bytesParaBase64(bytes) };
 }
@@ -72,8 +90,11 @@ async function processarMensagem(msg: TgMensagem, deps: DepsProcessar): Promise<
     return;
   }
 
-  await api.digitando(chatId);
-  const idAnalisando = await api.enviarMensagem(chatId, escaparHtml(MSG_ANALISANDO));
+  const agora = deps.agora ?? Date.now;
+  const inicio = deps.inicio ?? agora();
+  // Melhor esforço: falha nestes avisos não pode impedir a análise.
+  await api.digitando(chatId).catch(() => undefined);
+  const idAnalisando = await api.enviarMensagem(chatId, escaparHtml(MSG_ANALISANDO)).catch(() => undefined);
 
   let imagem: Imagem | undefined;
   if (c.imagem) {
@@ -85,7 +106,18 @@ async function processarMensagem(msg: TgMensagem, deps: DepsProcessar): Promise<
     imagem = baixada;
   }
 
-  const veredito = await deps.analisar(montarEntrada(c.texto, imagem));
+  const prazo = calcularPrazoAnaliseMs(agora() - inicio);
+  if (prazo === null) {
+    await responder(
+      api,
+      chatId,
+      idAnalisando,
+      formatarOrientacaoBasica("Está demorando mais do que o normal e não consegui analisar.", ORIENTACAO_BASICA),
+    );
+    return;
+  }
+
+  const veredito = await deps.analisar(montarEntrada(c.texto, imagem), { timeoutMs: prazo });
   const { texto, teclado } = formatarVeredito(veredito);
   await responder(api, chatId, idAnalisando, texto, teclado);
 }

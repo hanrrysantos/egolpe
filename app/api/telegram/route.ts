@@ -10,6 +10,7 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 export async function POST(req: Request): Promise<Response> {
+  const inicio = Date.now();
   if (!segredoValido(req.headers.get("x-telegram-bot-api-secret-token"), process.env.TELEGRAM_WEBHOOK_SECRET)) {
     return new Response("unauthorized", { status: 401 });
   }
@@ -30,10 +31,14 @@ export async function POST(req: Request): Promise<Response> {
   // Responde 200 já, para o Telegram não reenviar; o trabalho continua depois.
   after(async () => {
     try {
-      const deps = depsPadrao(criarApiTelegram(token), {
-        armazenamento: criarArmazenamentoUpstash(),
-        aoFalhar: (erro) => console.warn(JSON.stringify({ evento: "limite_falha", erro })),
-      });
+      const deps = depsPadrao(
+        criarApiTelegram(token),
+        {
+          armazenamento: criarArmazenamentoUpstash(),
+          aoFalhar: (erro) => console.warn(JSON.stringify({ evento: "limite_falha", erro })),
+        },
+        inicio,
+      );
       await processarUpdate(update, deps);
     } catch (e) {
       console.error(JSON.stringify({ evento: "telegram_erro", erro: descreverErro(e) }));

@@ -9,6 +9,8 @@ const MIMES_IMAGEM: readonly TipoMimeImagem[] = ["image/jpeg", "image/png", "ima
 export interface ArquivoImagem {
   fileId: string;
   mime: TipoMimeImagem;
+  /** Documento enviado como arquivo: o tamanho precisa ser conhecido antes de baixar. */
+  documento?: boolean;
 }
 
 /** O que fazer com uma mensagem recebida (decisão pura, sem rede). */
@@ -65,7 +67,7 @@ export function classificarMensagem(msg: TgMensagem): Classificacao {
       return {
         tipo: "analisar",
         texto: legenda,
-        imagem: { fileId: msg.document.file_id, mime: mime as TipoMimeImagem },
+        imagem: { fileId: msg.document.file_id, mime: mime as TipoMimeImagem, documento: true },
       };
     }
   }
