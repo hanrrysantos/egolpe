@@ -2,11 +2,11 @@
 
 **Encaminhe a mensagem suspeita. Receba um veredito claro, em segundos.**
 
-Bot no Telegram que analisa mensagens, prints, links e áudios suspeitos e diz, em linguagem simples, se aquilo é seguro, suspeito ou golpe, explicando por quê e o que fazer agora. Pensado para quem tem pouca familiaridade com tecnologia e para as famílias que cuidam dessas pessoas.
+Bot no Telegram que analisa mensagens, prints e links suspeitos e diz, em linguagem simples, se aquilo é seguro, suspeito ou golpe, explicando por quê e o que fazer agora. Pensado para quem tem pouca familiaridade com tecnologia e para as famílias que cuidam dessas pessoas.
 
 > Projeto desenvolvido para o **Hack Brasil 2026**, trilha **Cibersegurança**.
 
-- **Bot:** `@EGolpeBot` _(a definir)_
+- **Bot:** [@EGolpeBot](https://t.me/EGolpeBot)
 - **Site:** _(a definir)_
 - **Vídeo de demonstração:** _(a definir)_
 
@@ -48,7 +48,8 @@ O texto não tem erros de português, a foto é do filho e o valor é crível. E
 > 🔴 **Isso é golpe.**
 >
 > - A mensagem diz que é do seu filho, mas vem de um número novo, e o pedido de dinheiro chegou logo depois da troca.
-> - Há pressa ("hoje", "senão vai dar juros") é uma desculpa para ele não poder pagar sozinho.
+> - Há pressa ("hoje", "senão vai dar juros"), para você agir sem conferir.
+> - Diz que o app do banco está bloqueado, uma desculpa para ele não poder pagar sozinho.
 > - A chave Pix está no nome de outra pessoa.
 >
 > **O que fazer agora:**
@@ -65,14 +66,15 @@ O **É golpe?** funciona onde a pessoa já está: numa conversa de mensagens. N�
 
 ### Como funciona
 
-1. **A pessoa envia** o que recebeu: texto colado, print da conversa, link ou um áudio contando o que aconteceu (por exemplo, uma ligação suspeita).
+1. **A pessoa envia** o que recebeu: texto colado, print da conversa ou link. Se a pessoa mandar um áudio, o bot explica que, por enquanto, só entende texto e print.
 2. **O bot extrai** do conteúdo o que importa: links, chaves Pix, linha digitável de boleto, telefones e quem a mensagem diz ser.
 3. **O bot verifica fatos** que um chatbot comum não verifica:
-   - idade do domínio e semelhança com sites de bancos, governo e lojas conhecidas;
+   - idade do domínio e semelhança com sites de bancos, governo e lojas conhecidas (lista de referência com cerca de 40 domínios oficiais, conferidos à mão);
+   - se o telefone para "ligar para a central" é o número oficial do banco;
    - destino real de links encurtados;
    - presença em listas públicas de phishing;
    - no boleto, se o banco codificado na linha digitável bate com o emissor alegado.
-4. **O bot responde** com um veredito em três níveis (🟢 seguro, 🟡 suspeito, 🔴 golpe), os motivos com as evidências encontradas e um roteiro do que fazer agora.
+4. **O bot responde** com um veredito em três níveis (🟢 seguro, 🟡 suspeito, 🔴 golpe), os motivos com as evidências encontradas e um roteiro do que fazer agora. Um botão **"Já paguei / já cliquei"** mostra o roteiro para quem já caiu no golpe: falar com o banco, pedir a devolução pelo Pix (MED), registrar boletim de ocorrência e trocar senhas.
 
 ### Por que não simplesmente perguntar a um chatbot de IA?
 
@@ -84,22 +86,24 @@ O **É golpe?** funciona onde a pessoa já está: numa conversa de mensagens. N�
 | Precisão | Desconhecida | Medida e publicada (ver [Avaliação](#avaliação)) |
 | Para quem não sabe formular a pergunta | Exige saber o que perguntar | Basta encaminhar ou mandar um print |
 
-### Golpes cobertos _(proposta, a confirmar)_
+### Golpes cobertos
 
 - Falso parente ("troquei de número")
-- Falsa central de atendimento do banco
+- Falsa central de atendimento do banco (SMS ou mensagem que pede para ligar num número, como "compra aprovada, se não reconhece ligue para...")
 - Taxa falsa de entrega (Correios, transportadoras, alfândega)
-- Boleto adulterado e páginas falsas de governo ("valores a receber", benefícios)
+- Boleto adulterado
+- Página falsa de governo ("valores a receber", benefícios)
 
 ### Privacidade
 
 - Mensagens enviadas ao bot **não são armazenadas** depois da análise.
 - Todos os exemplos usados no desenvolvimento e na demonstração são **sintéticos**: nenhum dado pessoal real de terceiros.
-- Cada usuário tem um **limite de análises por hora**, para evitar abuso do serviço.
+- Cada usuário pode fazer até **20 análises por hora**, e o bot inteiro até **300 por dia**, para evitar abuso e proteger o orçamento. Ao atingir o limite, o bot ainda responde com a orientação básica de segurança.
 
 ### Canais
 
 - **Agora:** bot no Telegram, com uma landing page que explica o projeto e leva ao bot.
+- **Próximo passo:** análise de áudio (por exemplo, a pessoa contando uma ligação suspeita), com transcrição antes da extração.
 - **Próximo passo:** o mesmo bot no WhatsApp, onde está a maior parte do público-alvo. O núcleo de análise é separado do canal, então um novo canal é só um novo adaptador.
 
 ## Arquitetura
@@ -112,8 +116,8 @@ Telegram ──► Adaptador do canal ──► Núcleo de análise ──► Ve
                                       └─ 3. Síntese do veredito
 ```
 
-- **Adaptador do canal:** converte a mensagem do Telegram (texto, imagem, áudio) para um formato comum e devolve o veredito com botões.
-- **Extração:** um modelo multimodal lê prints e textos e devolve dados estruturados. Áudios passam antes por transcrição.
+- **Adaptador do canal:** converte a mensagem do Telegram (texto, imagem) para um formato comum e devolve o veredito com botões.
+- **Extração:** um modelo multimodal lê prints e textos e devolve dados estruturados.
 - **Sinais determinísticos:** verificações em código, sem IA, que produzem evidências objetivas.
 - **Síntese:** o modelo recebe as evidências e escreve o veredito em linguagem simples, sem afirmar nada que as evidências não sustentem.
 
@@ -142,13 +146,14 @@ Telegram ──► Adaptador do canal ──► Núcleo de análise ──► Ve
 |---|---|---|
 | Canal | Bot API do Telegram | ✅ Decidido |
 | Landing page | Página web estática que leva ao bot | ✅ Decidido |
-| Linguagem | TypeScript | _Proposta_ |
-| Backend e site | Next.js | _Proposta_ |
-| Modelo multimodal | _A definir_ (testar 2 modelos com os mesmos exemplos) | ⏳ |
-| Transcrição de áudio | _A definir_ | ⏳ |
-| Consulta de domínios | RDAP | _Proposta_ |
-| Listas de phishing | _A definir_ (conferir termos de uso) | ⏳ |
-| Hospedagem | _A definir_ (precisa ficar no ar durante toda a avaliação) | ⏳ |
+| Linguagem | TypeScript | ✅ Decidido |
+| Backend e site | Next.js (landing page + webhook do Telegram) | ✅ Decidido |
+| Modelo multimodal | Claude Haiku 5.5 vs. Claude Sonnet 5.5, comparados no conjunto de avaliação | ✅ Candidatos definidos |
+| Transcrição de áudio | Fora do MVP | ➡️ Próximo passo |
+| Consulta de domínios | RDAP (Registro.br para `.br`; bootstrap da IANA para as demais terminações) | ✅ Decidido |
+| Listas de phishing | Google Safe Browsing (principal) + feed comunitário do OpenPhish (consulta local) | ✅ Decidido _(conferir termos de uso)_ |
+| Hospedagem | Vercel, plano gratuito (conferir limite de tempo por requisição) | ✅ Decidido |
+| Limite de análises por usuário | Upstash Redis, plano gratuito (só ID do usuário e contador) | ✅ Decidido |
 
 ## Avaliação
 
@@ -168,8 +173,8 @@ _(em breve: preenchido quando houver código)_
 
 ### Usando o bot
 
-1. Abra o bot no Telegram: _(link)_
-2. Envie a mensagem suspeita: texto, print, link ou áudio.
+1. Abra o bot no Telegram: [@EGolpeBot](https://t.me/EGolpeBot)
+2. Envie a mensagem suspeita: texto, print ou link.
 3. Leia o veredito e siga o roteiro do que fazer.
 
 ### Rodando localmente
@@ -182,14 +187,10 @@ _(em breve: preenchido quando houver código)_
 
 | Nome | Frente |
 |---|---|
-| _Nome_ | Interface e experiência |
-| _Nome_ | Extração e síntese |
-| _Nome_ | Sinais e integrações |
-| _Nome_ | Avaliação, deploy e vídeo |
-
-## Licença
-
-[MIT](LICENSE)
+| Luiz Felipe Meneses Ferreira | Interface e experiência |
+| Hanrry Julio Araujo Santos | Extração e síntese |
+| Saylon da Rocha Batista | Sinais e integrações |
+| Gustavo Neves Coelho | Avaliação, deploy e vídeo |
 
 ## Referências
 
