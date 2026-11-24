@@ -1,9 +1,9 @@
 import { getDomain, parse } from "tldts";
 import { isIP } from "node:net";
 import type { Evidencia, Marca, Sinal } from "@/src/nucleo/tipos";
-import { ehEncurtador, resolverLinks, urlsParaVerificar, type ContextoInterno } from "./links";
+import { ehEncurtador, urlsParaVerificar, type ResolvedorLinks } from "./links";
 import { analisarHost } from "./marcas";
-import { dnsPadrao, validarDestino, type ResolvedorDns } from "./rede";
+import { validarLiteral } from "./rede";
 
 const BOOTSTRAP_URL = "https://data.iana.org/rdap/dns.json";
 const TIMEOUT_MS = 3000;
@@ -24,10 +24,11 @@ export function limparCacheBootstrap(): void {
   bootstrapEmCache = undefined;
 }
 
-async function buscarJson(fetchFn: typeof fetch, url: string, dns: ResolvedorDns, signal?: AbortSignal): Promise<unknown> {
+async function buscarJson(fetchFn: typeof fetch, url: string, signal?: AbortSignal): Promise<unknown> {
   const u = new URL(url);
   if (u.protocol !== "https:") throw new Error("não https");
-  const v = await validarDestino(u, dns);
+  // RDAP e bootstrap são hosts fixos e conhecidos (o bootstrap vem da IANA): basta barrar IP literal/host local.
+  const v = validarLiteral(u);
   if (!v.ok) throw new Error(v.motivo);
   const sinais = [AbortSignal.timeout(TIMEOUT_MS), ...(signal ? [signal] : [])];
   const res = await fetchFn(url, { redirect: "manual", signal: AbortSignal.any(sinais), headers: { accept: "application/rdap+json, application/json" } });
@@ -38,10 +39,10 @@ async function buscarJson(fetchFn: typeof fetch, url: string, dns: ResolvedorDns
   return res.json();
 }
 
-function carregarBootstrap(fetchFn: typeof fetch, dns: ResolvedorDns, signal?: AbortSignal): Promise<Record<string, string> | null> {
+function carregarBootstrap(fetchFn: typeof fetch, signal?: AbortSignal): Promise<Record<string, string> | null> {
   bootstrapEmCache ??= (async () => {
     try {
-      const j = (await buscarJson(fetchFn, BOOTSTRAP_URL, dns, signal)) as { services?: [string[], string[]][] };
+      const j = (await buscarJson(fetchFn, BOOTSTRAP_URL, signal)) as { services?: [string[], string[]][] };
       const mapa: Record<string, string> = {};
       for (const [tlds, urls] of j.services ?? []) {
         const url = urls.find((x) => x.startsWith("https://")) ?? urls[0];
@@ -57,19 +58,19 @@ function carregarBootstrap(fetchFn: typeof fetch, dns: ResolvedorDns, signal?: A
   return bootstrapEmCache;
 }
 
-async function urlRdap(dominio: string, fetchFn: typeof fetch, dns: ResolvedorDns, signal?: AbortSignal): Promise<string | null> {
+async function urlRdap(dominio: string, fetchFn: typeof fetch, signal?: AbortSignal): Promise<string | null> {
   const tld = dominio.split(".").pop() ?? "";
   let base: string | undefined = SNAPSHOT[tld];
-  if (!base) base = (await carregarBootstrap(fetchFn, dns, signal))?.[tld];
+  if (!base) base = (await carregarBootstrap(fetchFn, signal))?.[tld];
   return base ? `${base}domain/${encodeURIComponent(dominio)}` : null;
 }
 
 /** Data de registro (evento `registration`) via RDAP, ou null. */
-export async function dataDeRegistro(dominio: string, fetchFn: typeof fetch, dns: ResolvedorDns, signal?: AbortSignal): Promise<Date | null> {
+export async function dataDeRegistro(dominio: string, fetchFn: typeof fetch, signal?: AbortSignal): Promise<Date | null> {
   try {
-    const url = await urlRdap(dominio, fetchFn, dns, signal);
+    const url = await urlRdap(dominio, fetchFn, signal);
     if (!url) return null;
-    const j = (await buscarJson(fetchFn, url, dns, signal)) as { events?: { eventAction?: string; eventDate?: string }[] };
+    const j = (await buscarJson(fetchFn, url, signal)) as { events?: { eventAction?: string; eventDate?: string }[] };
     const ev = j.events?.find((e) => e.eventAction === "registration" && e.eventDate);
     if (!ev?.eventDate) return null;
     const d = new Date(ev.eventDate);
@@ -88,13 +89,12 @@ export function descreverIdade(dias: number): string {
 }
 
 /** Sinal `idade_dominio`: há quanto tempo o site existe (RDAP, nunca WHOIS). */
-export function criarSinalIdade(marcas: Marca[], dns: ResolvedorDns = dnsPadrao): Sinal {
+export function criarSinalIdade(marcas: Marca[], resolverLinks: ResolvedorLinks): Sinal {
   return {
     id: "idade_dominio",
     async verificar(extracao, ctx) {
       try {
-        const interno = ctx as ContextoInterno;
-        const links = await resolverLinks(extracao, interno);
+        const links = await resolverLinks(extracao, ctx);
         const dominios = new Set<string>();
         for (const u of urlsParaVerificar(links)) {
           const host = u.hostname.toLowerCase();
@@ -107,7 +107,7 @@ export function criarSinalIdade(marcas: Marca[], dns: ResolvedorDns = dnsPadrao)
         const lista = [...dominios].slice(0, MAX_DOMINIOS);
         const evs = await Promise.all(
           lista.map(async (d): Promise<Evidencia> => {
-            const criado = await dataDeRegistro(d, ctx.fetch, dns, interno.signal);
+            const criado = await dataDeRegistro(d, ctx.fetch, ctx.signal);
             if (!criado) {
               return { sinal: "idade_dominio", resultado: "sem_resultado", alvo: d, descricao: "não foi possível saber há quanto tempo o site existe" };
             }

@@ -1,6 +1,6 @@
 import { getDomain } from "tldts";
 import type { ContextoSinais, Extracao } from "@/src/nucleo/tipos";
-import { dnsPadrao, seguirRedirecionamentos, type ContextoRede, type ResolucaoLink, type ResolvedorDns } from "./rede";
+import { dnsPadrao, seguirRedirecionamentos, transporteNode, type ContextoRede, type ResolucaoLink, type ResolvedorDns, type Transporte } from "./rede";
 
 export const ENCURTADORES = new Set([
   "bit.ly", "tinyurl.com", "cutt.ly", "encurtador.com.br", "t.co", "is.gd", "rebrand.ly", "s.id", "l1nk.dev",
@@ -50,29 +50,42 @@ export function linksDaExtracao(extracao: Extracao): URL[] {
   return out;
 }
 
-export type ContextoInterno = ContextoSinais & { signal?: AbortSignal; dns?: ResolvedorDns };
+export interface DepsRede {
+  dns: ResolvedorDns;
+  transporte: Transporte;
+}
+
+/** Resolve os links da extração. Só encurtadores recebem requisição; o resto nunca é tocado. */
+export type ResolvedorLinks = (extracao: Extracao, ctx: ContextoSinais) => Promise<LinkResolvido[]>;
 
 const memo = new WeakMap<Extracao, { ctx: ContextoSinais; p: Promise<LinkResolvido[]> }>();
 
 /** Fase 1: resolve os links uma única vez por (extração, contexto); compartilhado entre sinais. */
-export function resolverLinks(extracao: Extracao, ctx: ContextoInterno): Promise<LinkResolvido[]> {
-  const guardado = memo.get(extracao);
-  if (guardado && guardado.ctx === ctx) return guardado.p;
-  const rede: ContextoRede = { fetch: ctx.fetch, dns: ctx.dns ?? dnsPadrao, signal: ctx.signal };
-  const p = Promise.all(
-    linksDaExtracao(extracao).map(async (original): Promise<LinkResolvido> => {
-      let resolucao: ResolucaoLink;
-      try {
-        resolucao = await seguirRedirecionamentos(original, rede);
-      } catch (e) {
-        resolucao = { status: "falha", cadeia: [original.href], motivo: e instanceof Error ? e.name : "erro" };
-      }
-      const final = resolucao.status === "ok" && resolucao.final && resolucao.final !== original.href ? new URL(resolucao.final) : undefined;
-      return { original, encurtador: ehEncurtador(original.hostname), resolucao, final };
-    }),
-  );
-  memo.set(extracao, { ctx, p });
-  return p;
+export function criarResolvedorLinks(deps: { dns?: ResolvedorDns; transporte?: Transporte } = {}): ResolvedorLinks {
+  return (extracao, ctx) => {
+    const guardado = memo.get(extracao);
+    if (guardado && guardado.ctx === ctx) return guardado.p;
+    const rede: ContextoRede = {
+      dns: ctx.dns ?? deps.dns ?? dnsPadrao,
+      transporte: deps.transporte ?? transporteNode,
+      consultar: (u) => ehEncurtador(u.hostname),
+      signal: ctx.signal,
+    };
+    const p = Promise.all(
+      linksDaExtracao(extracao).map(async (original): Promise<LinkResolvido> => {
+        let resolucao: ResolucaoLink;
+        try {
+          resolucao = await seguirRedirecionamentos(original, rede);
+        } catch (e) {
+          resolucao = { status: "falha", cadeia: [original.href], motivo: e instanceof Error ? e.name : "erro" };
+        }
+        const final = resolucao.status === "ok" && resolucao.final && resolucao.final !== original.href ? new URL(resolucao.final) : undefined;
+        return { original, encurtador: ehEncurtador(original.hostname), resolucao, final };
+      }),
+    );
+    memo.set(extracao, { ctx, p });
+    return p;
+  };
 }
 
 /** URLs a verificar nos demais sinais: originais e finais, sem duplicar. */

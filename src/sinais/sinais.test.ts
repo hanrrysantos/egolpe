@@ -1,12 +1,14 @@
 import { describe, expect, it, beforeEach } from "vitest";
 import type { ContextoSinais, Evidencia, Extracao, Marca } from "@/src/nucleo/tipos";
 import { criarSinais, verificarSinais } from "./index";
-import { ipBloqueado, seguirRedirecionamentos, validarDestino } from "./rede";
+import http from "node:http";
+import type { AddressInfo } from "node:net";
+import { ipBloqueado, seguirRedirecionamentos, transporteNode, validarDestino, type RespostaSalto, type Transporte } from "./rede";
 import { limparCacheBootstrap } from "./sinal-idade";
 import { dvModulo10, dvModulo11, validarLinhaDigitavel } from "./sinal-boleto";
 import { normalizarTelefone } from "./sinal-telefone";
 import { analisarHost, encontrarMarcaAlegada } from "./marcas";
-import { normalizarLink } from "./links";
+import { ehEncurtador, normalizarLink } from "./links";
 
 // ---------------------------------------------------------------------------
 // Auxiliares
@@ -100,24 +102,74 @@ describe("validarDestino", () => {
   });
 });
 
+/** Transporte falso: registra cada pedido (método e IP fixado) e responde pelas rotas. */
+interface PedidoRegistrado { url: string; metodo: string; ip: string }
+function transporteFalso(rotas: ((url: string, metodo: string) => RespostaSalto | undefined)[], pedidos: PedidoRegistrado[] = []): Transporte {
+  return async ({ url, metodo, ip }) => {
+    pedidos.push({ url: url.href, metodo, ip });
+    for (const r of rotas) {
+      const res = r(url.href, metodo);
+      if (res) return res;
+    }
+    throw new TypeError("sem rota (rede bloqueada nos testes): " + url.href);
+  };
+}
+const salto = (para: string, status = 301): RespostaSalto => ({ status, location: para });
+const resp200: RespostaSalto = { status: 200 };
+const tudo = () => true;
+
 describe("seguirRedirecionamentos", () => {
-  it("segue a cadeia até o destino e usa redirect manual", async () => {
-    const inits: (RequestInit | undefined)[] = [];
-    const f = fetchFalso([
-      (u, i) => { inits.push(i); return u === "http://bit.ly/abc" ? redir("https://meio.test/x") : undefined; },
-      (u) => (u === "https://meio.test/x" ? redir("/final") : undefined),
-      (u) => (u === "https://meio.test/final" ? ok() : undefined),
-    ]);
-    const r = await seguirRedirecionamentos(new URL("http://bit.ly/abc"), { fetch: f, dns: DNS_PUBLICO });
-    expect(r).toMatchObject({ status: "ok", final: "https://meio.test/final" });
+  it("segue a cadeia de encurtadores com HEAD, fixando o IP validado", async () => {
+    const pedidos: PedidoRegistrado[] = [];
+    const t = transporteFalso([
+      (u) => (u === "http://bit.ly/abc" ? salto("https://tinyurl.com/x") : undefined),
+      (u) => (u === "https://tinyurl.com/x" ? salto("/final") : undefined),
+      (u) => (u === "https://tinyurl.com/final" ? resp200 : undefined),
+    ], pedidos);
+    const r = await seguirRedirecionamentos(new URL("http://bit.ly/abc"), { transporte: t, dns: DNS_PUBLICO, consultar: tudo });
+    expect(r).toMatchObject({ status: "ok", final: "https://tinyurl.com/final" });
     expect(r.cadeia).toHaveLength(3);
-    expect(inits[0]?.redirect).toBe("manual");
+    expect(pedidos.every((p) => p.metodo === "HEAD" && p.ip === "93.184.216.34")).toBe(true);
+  });
+
+  it("cai para GET só quando o HEAD é recusado com 405 ou 501", async () => {
+    for (const status of [405, 501]) {
+      const pedidos: PedidoRegistrado[] = [];
+      const t = transporteFalso([(u, m) => (m === "HEAD" ? { status } : u === "http://bit.ly/a" ? salto("https://golpe.test/") : undefined)], pedidos);
+      const r = await seguirRedirecionamentos(new URL("http://bit.ly/a"), { transporte: t, dns: DNS_PUBLICO, consultar: (u) => u.hostname === "bit.ly" });
+      expect(pedidos.map((p) => p.metodo)).toEqual(["HEAD", "GET"]);
+      expect(r.final).toBe("https://golpe.test/");
+    }
+    const pedidos: PedidoRegistrado[] = [];
+    const t = transporteFalso([() => ({ status: 404 })], pedidos);
+    await seguirRedirecionamentos(new URL("http://bit.ly/a"), { transporte: t, dns: DNS_PUBLICO, consultar: tudo });
+    expect(pedidos.map((p) => p.metodo)).toEqual(["HEAD"]);
+  });
+
+  it("não faz requisição ao destino que não é encurtador", async () => {
+    const pedidos: PedidoRegistrado[] = [];
+    const t = transporteFalso([(u) => (u === "http://bit.ly/a" ? salto("https://golpe-unico-da-vitima.test/?id=123") : undefined)], pedidos);
+    const r = await seguirRedirecionamentos(new URL("http://bit.ly/a"), { transporte: t, dns: DNS_PUBLICO, consultar: (u) => ehEncurtador(u.hostname) });
+    expect(r).toMatchObject({ status: "ok", final: "https://golpe-unico-da-vitima.test/?id=123" });
+    expect(pedidos.map((p) => p.url)).toEqual(["http://bit.ly/a"]);
+  });
+
+  it("DNS rebinding: valida uma vez e a conexão recebe exatamente o IP validado", async () => {
+    let consultas = 0;
+    const dns = async () => (++consultas === 1 ? ["93.184.216.34"] : ["127.0.0.1"]);
+    const pedidos: PedidoRegistrado[] = [];
+    const t = transporteFalso([() => resp200], pedidos);
+    const r = await seguirRedirecionamentos(new URL("http://bit.ly/a"), { transporte: t, dns, consultar: tudo });
+    expect(r.status).toBe("ok");
+    expect(consultas).toBe(1);
+    expect(pedidos).toHaveLength(1);
+    expect(pedidos[0]!.ip).toBe("93.184.216.34");
   });
 
   it("para depois de 5 saltos", async () => {
     let n = 0;
-    const f = fetchFalso([() => redir(`http://salto${++n}.test/`)]);
-    const r = await seguirRedirecionamentos(new URL("http://inicio.test/"), { fetch: f, dns: DNS_PUBLICO });
+    const t = transporteFalso([() => { n++; return salto(`http://salto${n}.test/`); }]);
+    const r = await seguirRedirecionamentos(new URL("http://inicio.test/"), { transporte: t, dns: DNS_PUBLICO, consultar: tudo });
     expect(r.status).toBe("limite");
     expect(n).toBe(6); // inicial + 5 saltos seguidos; o sexto redirecionamento não é seguido
   });
@@ -125,18 +177,42 @@ describe("seguirRedirecionamentos", () => {
   it.each(["http://127.0.0.1/admin", "http://10.0.0.1/", "http://169.254.169.254/latest/meta-data", "http://[::1]/", "http://golpe-interno.test/"])(
     "bloqueia redirecionamento para %s sem fazer a requisição",
     async (alvo) => {
-      const chamadas: string[] = [];
-      const f = fetchFalso([(u) => (u === "http://curto.test/a" ? redir(alvo) : undefined)], chamadas);
+      const pedidos: PedidoRegistrado[] = [];
+      const t = transporteFalso([(u) => (u === "http://curto.test/a" ? salto(alvo) : undefined)], pedidos);
       const dns = async (h: string) => (h === "golpe-interno.test" ? ["192.168.1.10"] : ["93.184.216.34"]);
-      const r = await seguirRedirecionamentos(new URL("http://curto.test/a"), { fetch: f, dns });
+      const r = await seguirRedirecionamentos(new URL("http://curto.test/a"), { transporte: t, dns, consultar: tudo });
       expect(r.status).toBe("bloqueado");
-      expect(chamadas).toEqual(["http://curto.test/a"]);
+      expect(pedidos.map((p) => p.url)).toEqual(["http://curto.test/a"]);
     },
   );
 
   it("falha de rede vira status falha", async () => {
-    const r = await seguirRedirecionamentos(new URL("http://x.test/"), { fetch: fetchFalso([]), dns: DNS_PUBLICO });
+    const r = await seguirRedirecionamentos(new URL("http://x.test/"), { transporte: transporteFalso([]), dns: DNS_PUBLICO, consultar: tudo });
     expect(r.status).toBe("falha");
+  });
+});
+
+describe("transporteNode (conexão com IP fixado)", () => {
+  it("conecta no IP validado sem resolver o nome do host e mantém o Host original", async () => {
+    let hostRecebido = "";
+    let metodoRecebido = "";
+    const servidor = http.createServer((req, res) => {
+      hostRecebido = String(req.headers.host);
+      metodoRecebido = String(req.method);
+      res.writeHead(302, { location: "https://destino.test/x" });
+      res.end("corpo que nao deve ser lido");
+    });
+    await new Promise<void>((r) => servidor.listen(0, "127.0.0.1", r));
+    try {
+      const porta = (servidor.address() as AddressInfo).port;
+      // "rebinding.invalid" não resolve em nenhum DNS: só conecta se o lookup devolver o IP fixado.
+      const r = await transporteNode({ url: new URL(`http://rebinding.invalid:${porta}/p?q=1`), metodo: "HEAD", ip: "127.0.0.1" });
+      expect(r).toEqual({ status: 302, location: "https://destino.test/x" });
+      expect(hostRecebido).toBe(`rebinding.invalid:${porta}`);
+      expect(metodoRecebido).toBe("HEAD");
+    } finally {
+      servidor.close();
+    }
   });
 });
 
@@ -154,39 +230,46 @@ describe("normalizarLink", () => {
 // ---------------------------------------------------------------------------
 
 describe("link_encurtado", () => {
-  const sinais = (extra = {}) => criarSinais({ marcas: marcasTeste, dns: DNS_PUBLICO, chaveSafeBrowsing: () => undefined, ...extra });
+  const sinais = (transporte: Transporte, extra = {}) =>
+    criarSinais({ marcas: marcasTeste, dns: DNS_PUBLICO, chaveSafeBrowsing: () => undefined, transporte, ...extra });
+  const fetchRdap404 = fetchFalso([() => new Response("{}", { status: 404 })]);
 
-  it("encurtador que leva a outro site gera alerta moderado", async () => {
-    const f = fetchFalso([
-      (u) => (u === "http://bit.ly/x1" ? redir("https://caixa-beneficios.test/a") : undefined),
-      (u) => (u.startsWith("https://caixa-beneficios.test") ? ok() : undefined),
-      () => new Response("{}", { status: 404 }), // RDAP etc.
-    ]);
-    const ev = await verificarSinais(extracao({ links: ["bit.ly/x1"] }), ctxDe(f, { dns: DNS_PUBLICO }), sinais());
+  it("encurtador que leva a outro site gera alerta moderado, sem tocar o site de destino", async () => {
+    const pedidos: PedidoRegistrado[] = [];
+    const t = transporteFalso([(u) => (u === "http://bit.ly/x1" ? salto("https://caixa-beneficios.test/a") : undefined)], pedidos);
+    const ev = await verificarSinais(extracao({ links: ["bit.ly/x1"] }), ctxDe(fetchRdap404), sinais(t));
     const e = por(ev, "link_encurtado")[0]!;
     expect(e).toMatchObject({ resultado: "alerta", forca: "moderada" });
     expect(e.descricao).toBe("o link curto leva, na verdade, para caixa-beneficios.test");
+    expect(pedidos.map((p) => p.url)).toEqual(["http://bit.ly/x1"]);
   });
 
   it("encurtador bloqueado vira sem_resultado", async () => {
-    const f = fetchFalso([(u) => (u === "http://bit.ly/x2" ? redir("http://169.254.169.254/") : undefined)]);
-    const ev = await verificarSinais(extracao({ links: ["bit.ly/x2"] }), ctxDe(f, { dns: DNS_PUBLICO }), sinais());
+    const t = transporteFalso([(u) => (u === "http://bit.ly/x2" ? salto("http://169.254.169.254/") : undefined)]);
+    const ev = await verificarSinais(extracao({ links: ["bit.ly/x2"] }), ctxDe(fetchRdap404), sinais(t));
     expect(por(ev, "link_encurtado")[0]?.resultado).toBe("sem_resultado");
   });
 
-  it("link comum sem redirecionamento não gera evidência de encurtador", async () => {
-    const f = fetchFalso([(u) => (u.startsWith("https://exemplo.test") ? ok() : new Response("{}", { status: 404 }))]);
-    const ev = await verificarSinais(extracao({ links: ["https://exemplo.test/a"] }), ctxDe(f, { dns: DNS_PUBLICO }), sinais());
+  it("link que não é de encurtador não recebe nenhuma requisição (nem fetch, nem transporte)", async () => {
+    const pedidos: PedidoRegistrado[] = [];
+    const t = transporteFalso([() => resp200], pedidos);
+    const chamadas: string[] = [];
+    const f = fetchFalso([() => new Response("{}", { status: 404 })], chamadas);
+    const links = ["https://golpe-unico-da-vitima.test/a?id=9", "http://exemplo.test/", "https://www.caixa.gov.br/fgts"];
+    const ev = await verificarSinais(extracao({ links }), ctxDe(f), sinais(t, { chaveSafeBrowsing: () => "k" }));
+    expect(pedidos).toHaveLength(0);
+    // só RDAP e Safe Browsing (hosts fixos) usam fetch; o site do link nunca é consultado
+    for (const c of chamadas) expect(/^https:\/\/(rdap\.|data\.iana\.org|safebrowsing\.googleapis\.com)/.test(c), c).toBe(true);
     expect(por(ev, "link_encurtado")).toHaveLength(0);
+    expect(por(ev, "safe_browsing")).toHaveLength(3);
   });
 
-  it("http para https no mesmo site não é alerta", async () => {
-    const f = fetchFalso([
-      (u) => (u === "http://exemplo.test/" ? redir("https://www.exemplo.test/") : undefined),
-      (u) => (u.startsWith("https://www.exemplo.test") ? ok() : new Response("{}", { status: 404 })),
-    ]);
-    const ev = await verificarSinais(extracao({ links: ["http://exemplo.test/"] }), ctxDe(f, { dns: DNS_PUBLICO }), sinais());
-    expect(por(ev, "link_encurtado")).toHaveLength(0);
+  it("ctx.dns tem precedência sobre o DNS injetado em criarSinais", async () => {
+    const pedidos: PedidoRegistrado[] = [];
+    const t = transporteFalso([() => resp200], pedidos);
+    const dnsDoCtx = async () => ["93.184.216.7"];
+    await verificarSinais(extracao({ links: ["bit.ly/z"] }), ctxDe(fetchRdap404, { dns: dnsDoCtx }), sinais(t, { dns: async () => ["10.0.0.1"] }));
+    expect(pedidos[0]?.ip).toBe("93.184.216.7");
   });
 });
 
