@@ -159,6 +159,61 @@ describe("sintetizar", () => {
     });
   });
 
+  it("rebaixa 'seguro' apoiado em pedaço tranquilizador de um alerta (central do Itaú)", async () => {
+    const extracao: Extracao = {
+      ...extracaoParente,
+      chavesPix: [],
+      pedeDinheiro: false,
+      valor: undefined,
+      remetente: { descricao: "Itaú", marca: "Itaú", trocouDeNumero: false },
+      telefones: [{ numero: "(11) 4000-0000", contexto: "outro" }],
+      trechos: ["Itaú: sua fatura fechou"],
+      urgencia: [],
+      tipoProvavel: "nenhum",
+    };
+    const alertaTelefone: Evidencia = {
+      sinal: "telefone_oficial",
+      resultado: "alerta",
+      forca: "forte",
+      alvo: "(11) 4000-0000",
+      descricao: "esse número não é o da central oficial do Itaú",
+    };
+    const { cliente } = clienteFalso({
+      corpo: {
+        nivel: "seguro",
+        tipo: "nenhum",
+        motivos: [{ texto: "O número é o da central oficial.", evidencia: "o da central oficial do Itaú" }],
+      },
+    });
+    const r = await sintetizar(extracao, [alertaTelefone], deps(cliente));
+    expect(r.nivel).toBe("suspeito");
+    expect(r.motivos).toEqual([]);
+  });
+
+  it("rebaixa 'seguro' quando há link sem confirmação de site oficial", async () => {
+    const extracao: Extracao = {
+      ...extracaoParente,
+      chavesPix: [],
+      pedeDinheiro: false,
+      valor: undefined,
+      remetente: { descricao: "Banco Exemplo", marca: "Banco Exemplo", trocouDeNumero: false },
+      links: ["banco-exemplo-app.test/extrato"],
+      trechos: ["Seu extrato de outubro está disponível"],
+      urgencia: [],
+      tipoProvavel: "nenhum",
+    };
+    const { cliente } = clienteFalso({
+      corpo: {
+        nivel: "seguro",
+        tipo: "nenhum",
+        motivos: [{ texto: "É só um aviso de extrato.", evidencia: "Seu extrato de outubro está disponível" }],
+      },
+    });
+    const r = await sintetizar(extracao, [], deps(cliente));
+    expect(r.nivel).toBe("suspeito");
+    expect(r.motivos).toEqual([]);
+  });
+
   it("envia os dados delimitados e sem como fechar o delimitador", async () => {
     const extracao: Extracao = {
       ...extracaoParente,
@@ -200,9 +255,17 @@ describe("sintetizar", () => {
 describe("evidenciaSustentada", () => {
   const fontes = fontesDeEvidencia(extracaoParente, [alertaSite, neutroLista]);
 
-  it("compara sem acentos, maiúsculas nem espaços extras e aceita citação parcial", () => {
+  it("compara sem acentos, maiúsculas nem espaços extras e aceita citação parcial de trecho", () => {
     expect(evidenciaSustentada("  TROQUEI   de Numero ", fontes)).toBe(true);
-    expect(evidenciaSustentada("criado há 3 dias", fontes)).toBe(true);
+    expect(evidenciaSustentada("faz um Pix", fontes)).toBe(true);
+  });
+
+  it("aceita o trecho inteiro mesmo curto, mas não citação parcial curta ou de uma palavra só", () => {
+    expect(evidenciaSustentada("hoje", fontes)).toBe(true);
+    expect(evidenciaSustentada("R$ 1.850,00", fontes)).toBe(true);
+    expect(evidenciaSustentada("Oi mãe", fontes)).toBe(false);
+    expect(evidenciaSustentada("número", fontes)).toBe(false);
+    expect(evidenciaSustentada("de número", fontes)).toBe(true);
   });
 
   it("aceita a fonte com um pouco de texto em volta, mas não frase inventada em torno de um valor", () => {
@@ -210,8 +273,49 @@ describe("evidenciaSustentada", () => {
     expect(evidenciaSustentada("o banco disse que R$ 1.850,00 é uma cobrança legítima e verificada", fontes)).toBe(false);
   });
 
+  it("exige a descrição do sinal inteira, ou quase inteira", () => {
+    expect(evidenciaSustentada("criado há 3 dias", fontes)).toBe(false);
+    expect(evidenciaSustentada("site foi criado há 3 dias", fontes)).toBe(true);
+  });
+
+  it("não aceita pedaço da descrição de um alerta que muda o sentido (central do Itaú)", () => {
+    const alertaTelefone: Evidencia = {
+      sinal: "telefone_oficial",
+      resultado: "alerta",
+      forca: "forte",
+      alvo: "(11) 4000-0000",
+      descricao: "esse número não é o da central oficial do Itaú",
+    };
+    const f = fontesDeEvidencia({ ...extracaoParente, trechos: [], urgencia: [], valor: undefined }, [alertaTelefone]);
+    expect(evidenciaSustentada("o da central oficial do Itaú", f)).toBe(false);
+    expect(evidenciaSustentada("central oficial do Itaú", f)).toBe(false);
+    expect(evidenciaSustentada("esse número não é o da central oficial do Itaú", f)).toBe(true);
+    expect(evidenciaSustentada("Esse número não é o da central oficial do Itaú.", f)).toBe(true);
+  });
+
+  it("exige link, chave Pix e telefone inteiros", () => {
+    const f = fontesDeEvidencia(
+      {
+        ...extracaoParente,
+        links: ["caixa.gov.br.golpe.test/premio"],
+        telefones: [{ numero: "(11) 4000-0000", contexto: "ligar_para" }],
+      },
+      [],
+    );
+    expect(evidenciaSustentada("caixa.gov.br", f)).toBe(false);
+    expect(evidenciaSustentada("caixa.gov.br.golpe.test/premio", f)).toBe(true);
+    expect(evidenciaSustentada("4000-0000", f)).toBe(false);
+    expect(evidenciaSustentada("(11) 4000-0000", f)).toBe(true);
+    expect(evidenciaSustentada("1b2c3d4e", f)).toBe(false);
+    expect(evidenciaSustentada("1b2c3d4e-0000-4abc-8def-1234567890ab", f)).toBe(true);
+  });
+
   it("não aceita descrição de evidência neutra", () => {
     expect(evidenciaSustentada("o site não está na lista de golpes conhecidos", fontes)).toBe(false);
+  });
+
+  it("não aceita evidência vazia", () => {
+    expect(evidenciaSustentada("  ", fontes)).toBe(false);
   });
 });
 
