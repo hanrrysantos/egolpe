@@ -79,6 +79,7 @@ export async function analisarDetalhado(entrada: Entrada, opcoes: OpcoesAnalise 
       fetch: opcoes.fetch ?? fetch,
       agora: opcoes.agora ?? (() => new Date()),
       timeoutMs: opcoes.timeoutSinaisMs ?? 8_000,
+      signal: controle.signal,
     });
     const sintese = await etapas.sintetizar(extracao, evidencias, deps);
     veredito = aplicarGuardas(sintese, evidencias, extracao);

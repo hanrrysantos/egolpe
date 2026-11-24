@@ -82,10 +82,90 @@ describe("analisar", () => {
       etapas: {
         extrair: async () => extracaoVazia,
         verificarSinais: async () => [],
-        sintetizar: async () => ({ nivel: "seguro", tipo: "falso_parente", motivos: [] }),
+        sintetizar: async () => ({
+          nivel: "seguro",
+          tipo: "falso_parente",
+          motivos: [{ texto: "É um lembrete de consulta, sem pedido de nada", evidencia: "sua consulta é amanhã" }],
+        }),
       },
     });
     expect(r.veredito).toMatchObject({ nivel: "seguro", tipo: "nenhum", o_que_fazer: [] });
+  });
+
+  it("seguro sem nenhum motivo vira suspeito", async () => {
+    const r = await analisarDetalhado(entrada, {
+      ...base,
+      etapas: {
+        extrair: async () => extracaoVazia,
+        verificarSinais: async () => [],
+        sintetizar: async () => ({ nivel: "seguro", tipo: "nenhum", motivos: [] }),
+      },
+    });
+    expect(r.veredito.nivel).toBe("suspeito");
+  });
+
+  it("descarta os motivos tranquilizadores ao rebaixar seguro por alerta", async () => {
+    const r = await analisarDetalhado(entrada, {
+      ...base,
+      etapas: {
+        extrair: async () => extracaoVazia,
+        verificarSinais: async () => [alerta],
+        sintetizar: async () => ({
+          nivel: "seguro",
+          tipo: "nenhum",
+          motivos: [{ texto: "O link é do site oficial", evidencia: "criado há 3 dias" }],
+        }),
+      },
+    });
+    expect(r.veredito.nivel).toBe("suspeito");
+    expect(r.veredito.motivos.map((m) => m.texto)).not.toContain("O link é do site oficial");
+  });
+
+  it("seguro com link sem confirmação de sinal vira suspeito", async () => {
+    const link = "https://rastreio.exemplo.test/abc";
+    const r = await analisarDetalhado(entrada, {
+      ...base,
+      etapas: {
+        extrair: async () => ({ ...extracaoVazia, links: [link] }),
+        verificarSinais: async () => [{ sinal: "safe_browsing", resultado: "neutro", alvo: link, descricao: "não está na lista" }],
+        sintetizar: async () => ({ nivel: "seguro", tipo: "nenhum", motivos: [{ texto: "Rastreio", evidencia: "seu pedido" }] }),
+      },
+    });
+    expect(r.veredito.nivel).toBe("suspeito");
+  });
+
+  it("seguro com link de domínio oficial confirmado continua seguro", async () => {
+    const r = await analisarDetalhado(entrada, {
+      ...base,
+      etapas: {
+        extrair: async () => ({ ...extracaoVazia, links: ["https://www.gov.br/inss"] }),
+        verificarSinais: async () => [
+          { sinal: "dominio_oficial", resultado: "confirmacao", forca: "forte", alvo: "gov.br", descricao: "o link é do site oficial do gov.br" },
+        ],
+        sintetizar: async () => ({
+          nivel: "seguro",
+          tipo: "nenhum",
+          motivos: [{ texto: "O link é do site oficial", evidencia: "o link é do site oficial do gov.br" }],
+        }),
+      },
+    });
+    expect(r.veredito.nivel).toBe("seguro");
+  });
+
+  it("seguro com pedido de Pix vira suspeito", async () => {
+    const r = await analisarDetalhado(entrada, {
+      ...base,
+      etapas: {
+        extrair: async () => ({
+          ...extracaoVazia,
+          pedeDinheiro: true,
+          chavesPix: [{ valor: "pix-ficticio@exemplo.test", tipo: "email" }],
+        }),
+        verificarSinais: async () => [],
+        sintetizar: async () => ({ nivel: "seguro", tipo: "nenhum", motivos: [{ texto: "Parente", evidencia: "oi vó" }] }),
+      },
+    });
+    expect(r.veredito.nivel).toBe("suspeito");
   });
 
   it("nunca devolve seguro quando a mensagem tenta manipular a análise", async () => {
