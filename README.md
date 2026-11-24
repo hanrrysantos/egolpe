@@ -180,7 +180,13 @@ _(em breve: preenchido quando houver código)_
 ### Rodando localmente
 
 ```bash
-# pré-requisitos, instalação e variáveis de ambiente a definir
+# Node 20+
+npm install
+cp .env.example .env   # preencha as chaves
+npm run dev            # landing e webhook em http://localhost:3000
+npm test               # testes, sem rede
+npm run typecheck      # checagem de tipos
+npm run avaliar        # avaliação (chama a API do Claude; gasta cota)
 ```
 
 ## Equipe
