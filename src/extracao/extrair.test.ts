@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type Anthropic from "@anthropic-ai/sdk";
-import { extrair } from "./extrair";
+import { extrair, hostNoTexto } from "./extrair";
 import { ErroModelo, neutralizarDelimitadores } from "./modelo";
 import { clienteFalso, extracaoModeloVazia } from "./teste-cliente";
 import type { Entrada } from "@/src/nucleo/tipos";
@@ -167,6 +167,16 @@ describe("extrair", () => {
     expect(r.valor).toBeUndefined();
   });
 
+  it("sem imagem, descarta link oficial inventado que só aparece como pedaço de outro host", async () => {
+    for (const falso of ["caixa.gov.br.golpe.top/premio", "caixa.gov.br-seguro.test/premio"]) {
+      const { cliente } = clienteFalso({
+        corpo: { ...extracaoModeloVazia(), links: ["https://caixa.gov.br", "www.caixa.gov.br/premio", falso] },
+      });
+      const r = await extrair({ texto: `Resgate seu prêmio em ${falso} hoje`, imagens: [] }, deps(cliente));
+      expect(r.links).toEqual([falso]);
+    }
+  });
+
   it("completa com regex o que o modelo deixou passar", async () => {
     const texto =
       "Correios: sua encomenda está retida. Pague a taxa em correios-taxa.test/pagar ou ligue (11) 3000-0000. Boleto: 23790.12345 60000.123456 78901.234567 8 12340000015000";
@@ -175,5 +185,25 @@ describe("extrair", () => {
     expect(r.links).toEqual(["correios-taxa.test/pagar"]);
     expect(r.telefones).toEqual([{ numero: "(11) 3000-0000", contexto: "ligar_para" }]);
     expect(r.linhasDigitaveis).toEqual(["23790.12345 60000.123456 78901.234567 8 12340000015000"]);
+  });
+});
+
+describe("hostNoTexto", () => {
+  it("aceita o host inteiro, com esquema, www., caminho ou ponto final de frase", () => {
+    expect(hostNoTexto("caixa.gov.br", "acesse caixa.gov.br.")).toBe(true);
+    expect(hostNoTexto("caixa.gov.br", "acesse https://www.caixa.gov.br/app agora")).toBe(true);
+    expect(hostNoTexto("caixa.gov.br", "(caixa.gov.br)")).toBe(true);
+    expect(hostNoTexto("caixa.gov.br", "caixa.gov.br:443/x")).toBe(true);
+    expect(hostNoTexto("caixa.gov.br", "veja golpe.test e depois caixa.gov.br")).toBe(true);
+  });
+
+  it("recusa o host como pedaço de outro host ou de e-mail", () => {
+    expect(hostNoTexto("caixa.gov.br", "acesse caixa.gov.br.golpe.top")).toBe(false);
+    expect(hostNoTexto("caixa.gov.br", "acesse caixa.gov.br-seguro.test")).toBe(false);
+    expect(hostNoTexto("caixa.gov.br", "acesse premio-caixa.gov.br")).toBe(false);
+    expect(hostNoTexto("caixa.gov.br", "acesse sorteio.caixa.gov.br")).toBe(false);
+    expect(hostNoTexto("caixa.gov.br", "escreva para atendimento@caixa.gov.br")).toBe(false);
+    expect(hostNoTexto("caixa.gov.br", "acesse xwww.caixa.gov.br")).toBe(false);
+    expect(hostNoTexto("", "qualquer texto")).toBe(false);
   });
 });

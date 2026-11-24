@@ -40,6 +40,35 @@ export async function extrair(entrada: Entrada, deps: DepsModelo): Promise<Extra
   return extracao;
 }
 
+/** Caracteres que, colados antes do host, mostram que ele é pedaço de outro host ou de um e-mail. */
+const ANTES_PROIBIDO = /[\p{L}\p{N}@._-]/u;
+/** Colados depois do host, mostram que ele continua (ex.: "caixa.gov.br-seguro.test"). */
+const DEPOIS_PROIBIDO = /[\p{L}\p{N}_-]/u;
+
+/**
+ * O host aparece no texto como host inteiro, e não como pedaço de outro?
+ * "caixa.gov.br" não está em "caixa.gov.br.golpe.top" nem em "caixa.gov.br-seguro.test",
+ * mas está em "acesse caixa.gov.br." (ponto final da frase) e em "https://www.caixa.gov.br/x".
+ */
+export function hostNoTexto(host: string, textoMinusculo: string): boolean {
+  const h = host.toLowerCase();
+  if (h === "") return false;
+  for (let i = textoMinusculo.indexOf(h); i !== -1; i = textoMinusculo.indexOf(h, i + 1)) {
+    let inicio = i;
+    // "www." antes do host é aceito (a chave do link não tem "www.").
+    if (textoMinusculo.slice(Math.max(0, i - 4), i) === "www.") inicio = i - 4;
+    const antes = textoMinusculo[inicio - 1] ?? "";
+    const fim = i + h.length;
+    const depois = textoMinusculo[fim] ?? "";
+    const depoisDoPonto = textoMinusculo[fim + 1] ?? "";
+    const antesOk = antes === "" || !ANTES_PROIBIDO.test(antes);
+    const depoisOk =
+      depois === "" || (depois === "." ? !DEPOIS_PROIBIDO.test(depoisDoPonto) : !DEPOIS_PROIBIDO.test(depois));
+    if (antesOk && depoisOk) return true;
+  }
+  return false;
+}
+
 /**
  * Remove da extração itens que não aparecem no texto (alucinação ou manipulação).
  * Importante para a síntese: trechos e links viram evidência, e um link inventado
@@ -60,11 +89,7 @@ export function manterSoOQueEstaNoTexto(extracao: Extracao, texto: string): Extr
 
   return {
     ...extracao,
-    links: extracao.links.filter((l) => {
-      const k = chaveLink(l);
-      const host = k.split("/")[0] ?? "";
-      return host !== "" && tMinusculo.includes(host);
-    }),
+    links: extracao.links.filter((l) => hostNoTexto(chaveLink(l).split(/[/:?#]/)[0] ?? "", tMinusculo)),
     telefones: extracao.telefones.filter((tel) => digitosNoTexto(chaveTelefone(tel.numero))),
     linhasDigitaveis: extracao.linhasDigitaveis.filter(digitosNoTexto),
     chavesPix: extracao.chavesPix.filter((c) => {
