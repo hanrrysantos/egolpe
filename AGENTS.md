@@ -88,6 +88,25 @@ Falso parente ("troquei de número"), falsa central do banco (SMS ou mensagem qu
 - Métricas: acerto geral, golpes identificados como golpe, legítimas identificadas como seguras. Os resultados vão para a seção Avaliação do README.
 - Mudanças em prompts, modelo ou sinais devem ser medidas contra esse conjunto antes de entrar. Falso negativo (golpe marcado como seguro) é o erro mais grave.
 
+## Fluxo de trabalho com agentes
+
+O desenvolvimento usa o Claude Code com um **orquestrador** (a sessão principal, Opus) e **subagentes** definidos em `.claude/agents/`. O `CLAUDE.md` apenas importa este arquivo, para que as regras valham para todos.
+
+| Subagente | Frente | Modelo |
+|---|---|---|
+| `telegram` | Adaptador do Telegram, webhook, botões, limite no Redis | Sonnet |
+| `extracao-sintese` | Prompts, chamadas ao Claude, schemas, síntese do veredito | Opus |
+| `sinais` | Sinais determinísticos e base de referência de marcas | Sonnet |
+| `avaliacao` | Casos sintéticos, script e métricas de avaliação | Sonnet |
+| `revisor` | Revisão somente leitura antes de todo merge | Opus |
+
+Regras:
+- **O orquestrador** quebra o trabalho em tarefas, delega com contexto e critério de pronto, integra, roda os testes e faz commits e PRs. Ele é o único que altera os **tipos compartilhados** definidos na modelagem.
+- **Cada subagente** só altera os arquivos da sua frente. Se precisar mudar um contrato, propõe no relatório em vez de mudar.
+- **Paralelismo:** subagentes que trabalham ao mesmo tempo rodam em worktrees separados.
+- **Nada entra em `main`** sem passar pelo `revisor` e pelos testes.
+- **Cota:** a equipe usa plano de assinatura. Prefira poucas delegações bem definidas a muitas pequenas, e não rode a avaliação completa contra a API sem necessidade.
+
 ## Convenções
 
 - Conteúdo voltado ao usuário e documentação: português do Brasil.
