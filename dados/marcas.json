@@ -1,1 +1,653 @@
-[]
+[
+  {
+    "id": "bb",
+    "nome": "Banco do Brasil",
+    "nomePopular": "Banco do Brasil",
+    "categoria": "banco",
+    "dominios": [
+      "bb.com.br",
+      "bancobrasil.com.br"
+    ],
+    "palavrasChave": [
+      "bancodobrasil",
+      "bancobrasil",
+      "bb"
+    ],
+    "telefones": [],
+    "codigoBanco": "001",
+    "conferido": false
+  },
+  {
+    "id": "caixa",
+    "nome": "Caixa Econômica Federal",
+    "nomePopular": "Caixa",
+    "categoria": "banco",
+    "dominios": [
+      "caixa.gov.br"
+    ],
+    "palavrasChave": [
+      "caixa",
+      "cef",
+      "caixaeconomica",
+      "caixatem",
+      "fgts"
+    ],
+    "telefones": [],
+    "codigoBanco": "104",
+    "conferido": false
+  },
+  {
+    "id": "itau",
+    "nome": "Itaú Unibanco",
+    "nomePopular": "Itaú",
+    "categoria": "banco",
+    "dominios": [
+      "itau.com.br",
+      "itau.com"
+    ],
+    "palavrasChave": [
+      "itau"
+    ],
+    "telefones": [],
+    "codigoBanco": "341",
+    "conferido": false
+  },
+  {
+    "id": "bradesco",
+    "nome": "Bradesco",
+    "nomePopular": "Bradesco",
+    "categoria": "banco",
+    "dominios": [
+      "bradesco.com.br",
+      "banco.bradesco"
+    ],
+    "palavrasChave": [
+      "bradesco"
+    ],
+    "telefones": [],
+    "codigoBanco": "237",
+    "conferido": false
+  },
+  {
+    "id": "santander",
+    "nome": "Banco Santander",
+    "nomePopular": "Santander",
+    "categoria": "banco",
+    "dominios": [
+      "santander.com.br"
+    ],
+    "palavrasChave": [
+      "santander"
+    ],
+    "telefones": [],
+    "codigoBanco": "033",
+    "conferido": false
+  },
+  {
+    "id": "nubank",
+    "nome": "Nubank",
+    "nomePopular": "Nubank",
+    "categoria": "banco",
+    "dominios": [
+      "nubank.com.br",
+      "nu.com.br"
+    ],
+    "palavrasChave": [
+      "nubank"
+    ],
+    "telefones": [],
+    "codigoBanco": "260",
+    "conferido": false
+  },
+  {
+    "id": "inter",
+    "nome": "Banco Inter",
+    "nomePopular": "Inter",
+    "categoria": "banco",
+    "dominios": [
+      "bancointer.com.br"
+    ],
+    "palavrasChave": [
+      "bancointer"
+    ],
+    "telefones": [],
+    "codigoBanco": "077",
+    "conferido": false
+  },
+  {
+    "id": "c6",
+    "nome": "C6 Bank",
+    "nomePopular": "C6 Bank",
+    "categoria": "banco",
+    "dominios": [
+      "c6bank.com.br"
+    ],
+    "palavrasChave": [
+      "c6bank",
+      "c6"
+    ],
+    "telefones": [],
+    "codigoBanco": "336",
+    "conferido": false
+  },
+  {
+    "id": "picpay",
+    "nome": "PicPay",
+    "nomePopular": "PicPay",
+    "categoria": "banco",
+    "dominios": [
+      "picpay.com"
+    ],
+    "palavrasChave": [
+      "picpay"
+    ],
+    "telefones": [],
+    "codigoBanco": "380",
+    "conferido": false
+  },
+  {
+    "id": "mercadopago",
+    "nome": "Mercado Pago",
+    "nomePopular": "Mercado Pago",
+    "categoria": "banco",
+    "dominios": [
+      "mercadopago.com.br",
+      "mercadopago.com"
+    ],
+    "palavrasChave": [
+      "mercadopago"
+    ],
+    "telefones": [],
+    "codigoBanco": "323",
+    "conferido": false
+  },
+  {
+    "id": "banrisul",
+    "nome": "Banrisul",
+    "nomePopular": "Banrisul",
+    "categoria": "banco",
+    "dominios": [
+      "banrisul.com.br"
+    ],
+    "palavrasChave": [
+      "banrisul"
+    ],
+    "telefones": [],
+    "codigoBanco": "041",
+    "conferido": false
+  },
+  {
+    "id": "btg",
+    "nome": "BTG Pactual",
+    "nomePopular": "BTG Pactual",
+    "categoria": "banco",
+    "dominios": [
+      "btgpactual.com"
+    ],
+    "palavrasChave": [
+      "btgpactual",
+      "btg"
+    ],
+    "telefones": [],
+    "codigoBanco": "208",
+    "conferido": false
+  },
+  {
+    "id": "sicoob",
+    "nome": "Sicoob",
+    "nomePopular": "Sicoob",
+    "categoria": "banco",
+    "dominios": [
+      "sicoob.com.br"
+    ],
+    "palavrasChave": [
+      "sicoob"
+    ],
+    "telefones": [],
+    "codigoBanco": "756",
+    "conferido": false
+  },
+  {
+    "id": "sicredi",
+    "nome": "Sicredi",
+    "nomePopular": "Sicredi",
+    "categoria": "banco",
+    "dominios": [
+      "sicredi.com.br"
+    ],
+    "palavrasChave": [
+      "sicredi"
+    ],
+    "telefones": [],
+    "codigoBanco": "748",
+    "conferido": false
+  },
+  {
+    "id": "pagbank",
+    "nome": "PagBank (PagSeguro)",
+    "nomePopular": "PagBank",
+    "categoria": "banco",
+    "dominios": [
+      "pagbank.com.br",
+      "pagseguro.com.br"
+    ],
+    "palavrasChave": [
+      "pagbank",
+      "pagseguro"
+    ],
+    "telefones": [],
+    "codigoBanco": "290",
+    "conferido": false
+  },
+  {
+    "id": "safra",
+    "nome": "Banco Safra",
+    "nomePopular": "Safra",
+    "categoria": "banco",
+    "dominios": [
+      "safra.com.br"
+    ],
+    "palavrasChave": [
+      "safra"
+    ],
+    "telefones": [],
+    "codigoBanco": "422",
+    "conferido": false
+  },
+  {
+    "id": "govbr",
+    "nome": "Portal gov.br",
+    "nomePopular": "gov.br",
+    "categoria": "governo",
+    "dominios": [
+      "gov.br"
+    ],
+    "palavrasChave": [
+      "govbr"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "inss",
+    "nome": "INSS (Meu INSS)",
+    "nomePopular": "INSS",
+    "categoria": "governo",
+    "dominios": [
+      "inss.gov.br"
+    ],
+    "palavrasChave": [
+      "inss",
+      "meuinss"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "receita",
+    "nome": "Receita Federal",
+    "nomePopular": "Receita Federal",
+    "categoria": "governo",
+    "dominios": [
+      "receita.fazenda.gov.br",
+      "fazenda.gov.br"
+    ],
+    "palavrasChave": [
+      "receitafederal"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "bcb",
+    "nome": "Banco Central do Brasil (Valores a Receber)",
+    "nomePopular": "Banco Central",
+    "categoria": "governo",
+    "dominios": [
+      "bcb.gov.br"
+    ],
+    "palavrasChave": [
+      "bancocentral",
+      "valoresareceber",
+      "bcb"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "detran",
+    "nome": "Detran",
+    "nomePopular": "Detran",
+    "categoria": "governo",
+    "dominios": [
+      "detran.sp.gov.br",
+      "detran.rj.gov.br",
+      "detran.mg.gov.br",
+      "detran.pr.gov.br",
+      "detran.ba.gov.br",
+      "detran.rs.gov.br"
+    ],
+    "palavrasChave": [
+      "detran"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "serasa",
+    "nome": "Serasa",
+    "nomePopular": "Serasa",
+    "categoria": "governo",
+    "dominios": [
+      "serasa.com.br",
+      "serasaconsumidor.com.br"
+    ],
+    "palavrasChave": [
+      "serasa"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "tse",
+    "nome": "Tribunal Superior Eleitoral",
+    "nomePopular": "TSE",
+    "categoria": "governo",
+    "dominios": [
+      "tse.jus.br"
+    ],
+    "palavrasChave": [
+      "tse"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "correios",
+    "nome": "Correios",
+    "nomePopular": "Correios",
+    "categoria": "entrega",
+    "dominios": [
+      "correios.com.br"
+    ],
+    "palavrasChave": [
+      "correios",
+      "sedex"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "jadlog",
+    "nome": "Jadlog",
+    "nomePopular": "Jadlog",
+    "categoria": "entrega",
+    "dominios": [
+      "jadlog.com.br"
+    ],
+    "palavrasChave": [
+      "jadlog"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "loggi",
+    "nome": "Loggi",
+    "nomePopular": "Loggi",
+    "categoria": "entrega",
+    "dominios": [
+      "loggi.com"
+    ],
+    "palavrasChave": [
+      "loggi"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "totalexpress",
+    "nome": "Total Express",
+    "nomePopular": "Total Express",
+    "categoria": "entrega",
+    "dominios": [
+      "totalexpress.com.br"
+    ],
+    "palavrasChave": [
+      "totalexpress"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "dhl",
+    "nome": "DHL",
+    "nomePopular": "DHL",
+    "categoria": "entrega",
+    "dominios": [
+      "dhl.com"
+    ],
+    "palavrasChave": [
+      "dhl"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "fedex",
+    "nome": "FedEx",
+    "nomePopular": "FedEx",
+    "categoria": "entrega",
+    "dominios": [
+      "fedex.com"
+    ],
+    "palavrasChave": [
+      "fedex"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "ups",
+    "nome": "UPS",
+    "nomePopular": "UPS",
+    "categoria": "entrega",
+    "dominios": [
+      "ups.com"
+    ],
+    "palavrasChave": [
+      "ups"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "azulcargo",
+    "nome": "Azul Cargo Express",
+    "nomePopular": "Azul Cargo",
+    "categoria": "entrega",
+    "dominios": [
+      "azulcargo.com.br"
+    ],
+    "palavrasChave": [
+      "azulcargo"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "mercadolivre",
+    "nome": "Mercado Livre",
+    "nomePopular": "Mercado Livre",
+    "categoria": "loja",
+    "dominios": [
+      "mercadolivre.com.br",
+      "mercadolivre.com",
+      "mercadolibre.com"
+    ],
+    "palavrasChave": [
+      "mercadolivre",
+      "mercadolibre"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "amazon",
+    "nome": "Amazon",
+    "nomePopular": "Amazon",
+    "categoria": "loja",
+    "dominios": [
+      "amazon.com.br",
+      "amazon.com"
+    ],
+    "palavrasChave": [
+      "amazon"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "shopee",
+    "nome": "Shopee",
+    "nomePopular": "Shopee",
+    "categoria": "loja",
+    "dominios": [
+      "shopee.com.br"
+    ],
+    "palavrasChave": [
+      "shopee"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "magalu",
+    "nome": "Magazine Luiza",
+    "nomePopular": "Magalu",
+    "categoria": "loja",
+    "dominios": [
+      "magazineluiza.com.br",
+      "magalu.com"
+    ],
+    "palavrasChave": [
+      "magalu",
+      "magazineluiza"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "americanas",
+    "nome": "Americanas",
+    "nomePopular": "Americanas",
+    "categoria": "loja",
+    "dominios": [
+      "americanas.com.br",
+      "americanas.com"
+    ],
+    "palavrasChave": [
+      "americanas"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "casasbahia",
+    "nome": "Casas Bahia",
+    "nomePopular": "Casas Bahia",
+    "categoria": "loja",
+    "dominios": [
+      "casasbahia.com.br"
+    ],
+    "palavrasChave": [
+      "casasbahia"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "aliexpress",
+    "nome": "AliExpress",
+    "nomePopular": "AliExpress",
+    "categoria": "loja",
+    "dominios": [
+      "aliexpress.com"
+    ],
+    "palavrasChave": [
+      "aliexpress"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "shein",
+    "nome": "Shein",
+    "nomePopular": "Shein",
+    "categoria": "loja",
+    "dominios": [
+      "shein.com"
+    ],
+    "palavrasChave": [
+      "shein"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "carrefour",
+    "nome": "Carrefour",
+    "nomePopular": "Carrefour",
+    "categoria": "loja",
+    "dominios": [
+      "carrefour.com.br"
+    ],
+    "palavrasChave": [
+      "carrefour"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "havan",
+    "nome": "Havan",
+    "nomePopular": "Havan",
+    "categoria": "loja",
+    "dominios": [
+      "havan.com.br"
+    ],
+    "palavrasChave": [
+      "havan"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "kabum",
+    "nome": "KaBuM!",
+    "nomePopular": "KaBuM",
+    "categoria": "loja",
+    "dominios": [
+      "kabum.com.br"
+    ],
+    "palavrasChave": [
+      "kabum"
+    ],
+    "telefones": [],
+    "conferido": false
+  },
+  {
+    "id": "netshoes",
+    "nome": "Netshoes",
+    "nomePopular": "Netshoes",
+    "categoria": "loja",
+    "dominios": [
+      "netshoes.com.br"
+    ],
+    "palavrasChave": [
+      "netshoes"
+    ],
+    "telefones": [],
+    "conferido": false
+  }
+]
