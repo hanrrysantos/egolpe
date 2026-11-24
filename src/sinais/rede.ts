@@ -213,7 +213,8 @@ export async function seguirRedirecionamentos(inicial: URL, ctx: ContextoRede, o
     if (!ctx.consultar(atual)) return { status: "ok", cadeia, final: atual.href };
     const v = await validarDestino(atual, ctx.dns);
     if (!v.ok) return { status: "bloqueado", cadeia, motivo: v.motivo };
-    const ip = v.ips[0]!;
+    // Prefere IPv4: funções serverless muitas vezes não têm saída IPv6.
+    const ip = v.ips.find((i) => !i.includes(":")) ?? v.ips[0]!;
     let res: RespostaSalto;
     try {
       res = await ctx.transporte({ url: atual, metodo: "HEAD", ip, signal: sinalComPrazo(ctx.signal, timeout) });

@@ -208,16 +208,16 @@ describe("processarUpdate", () => {
 });
 
 describe("prazo da análise", () => {
-  it("calcularPrazoAnaliseMs: 60 s - decorrido - 8 s, com mínimo de 15 s", () => {
-    expect(calcularPrazoAnaliseMs(0)).toBe(52_000);
-    expect(calcularPrazoAnaliseMs(10_000)).toBe(42_000);
-    expect(calcularPrazoAnaliseMs(37_000)).toBe(15_000);
-    expect(calcularPrazoAnaliseMs(37_001)).toBeNull();
+  it("calcularPrazoAnaliseMs: 60 s - decorrido - 11 s, com mínimo de 15 s", () => {
+    expect(calcularPrazoAnaliseMs(0)).toBe(49_000);
+    expect(calcularPrazoAnaliseMs(10_000)).toBe(39_000);
+    expect(calcularPrazoAnaliseMs(34_000)).toBe(15_000);
+    expect(calcularPrazoAnaliseMs(34_001)).toBeNull();
   });
   it("passa o prazo calculado ao analisar", async () => {
     const t = criarDeps({ inicio: 1_000, agora: () => 11_000 });
     await processarUpdate({ update_id: 1, message: { ...base, text: "oi" } }, t.deps);
-    expect(t.analisar).toHaveBeenCalledWith({ texto: "oi", imagens: [] }, { timeoutMs: 42_000 });
+    expect(t.analisar).toHaveBeenCalledWith({ texto: "oi", imagens: [] }, { timeoutMs: 39_000 });
   });
   it("sem tempo suficiente: orientação básica e não analisa", async () => {
     const t = criarDeps({ inicio: 0, agora: () => 45_000 });

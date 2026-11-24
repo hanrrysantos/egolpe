@@ -23,7 +23,7 @@ import type { TgCallbackQuery, TgMensagem, TgUpdate } from "./tipos";
 /** Orçamento da função na Vercel (maxDuration da rota). */
 export const ORCAMENTO_TOTAL_MS = 60_000;
 /** Folga reservada para formatar e enviar o veredito. */
-export const FOLGA_RESPOSTA_MS = 8_000;
+export const FOLGA_RESPOSTA_MS = 11_000;
 /** Prazo mínimo para valer a pena analisar. */
 export const PRAZO_MINIMO_MS = 15_000;
 

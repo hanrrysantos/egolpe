@@ -94,7 +94,7 @@ export function hostCompartilhado(host: string): boolean {
   const h = host.toLowerCase().replace(/^www\./, "").replace(/\.$/, "");
   const partes = h.split(".");
   for (let i = 0; i < partes.length - 1; i++) if (HOSPEDAGEM_COMPARTILHADA.has(partes.slice(i).join("."))) return true;
-  const p = parse(h);
+  const p = parse(h, { allowPrivateDomains: true });
   return p.isPrivate === true;
 }
 
