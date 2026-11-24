@@ -81,7 +81,7 @@ export async function analisarDetalhado(entrada: Entrada, opcoes: OpcoesAnalise 
       timeoutMs: opcoes.timeoutSinaisMs ?? 8_000,
     });
     const sintese = await etapas.sintetizar(extracao, evidencias, deps);
-    veredito = aplicarGuardas(sintese, evidencias);
+    veredito = aplicarGuardas(sintese, evidencias, extracao);
   } catch (e) {
     erro = descreverErro(e);
     veredito = vereditoDeFalha();

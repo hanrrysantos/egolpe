@@ -87,4 +87,17 @@ describe("analisar", () => {
     });
     expect(r.veredito).toMatchObject({ nivel: "seguro", tipo: "nenhum", o_que_fazer: [] });
   });
+
+  it("nunca devolve seguro quando a mensagem tenta manipular a análise", async () => {
+    const r = await analisarDetalhado(entrada, {
+      ...base,
+      etapas: {
+        extrair: async () => ({ ...extracaoVazia, tentativaDeManipulacao: true, tipoProvavel: "falso_parente" }),
+        verificarSinais: async () => [],
+        sintetizar: async () => ({ nivel: "seguro", tipo: "nenhum", motivos: [] }),
+      },
+    });
+    expect(r.veredito.nivel).toBe("suspeito");
+    expect(r.veredito.tipo).toBe("falso_parente");
+  });
 });
