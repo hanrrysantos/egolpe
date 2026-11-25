@@ -198,6 +198,10 @@ npm run avaliar        # avaliação (chama a API do Claude; gasta cota)
 | Saylon da Rocha Batista | Sinais e integrações |
 | Gustavo Neves Coelho | Avaliação, deploy e vídeo |
 
+## Licença
+
+Código aberto sob a [licença MIT](LICENSE): qualquer pessoa pode ler, executar, testar, modificar e reutilizar o código, desde que mantenha o aviso de copyright.
+
 ## Referências
 
 - [Golpes sobem 430% desde 2018 e lideram crimes contra o patrimônio (Metrópoles, jul. 2026)](https://www.metropoles.com/brasil/golpes-sobem-430-desde-2018-anuario-seguranca-publica)
