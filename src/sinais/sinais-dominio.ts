@@ -1,3 +1,4 @@
+import { isIP } from "node:net";
 import { getDomain } from "tldts";
 import type { Evidencia, Marca, Sinal } from "@/src/nucleo/tipos";
 import { ehEncurtador, urlsParaVerificar, type ResolvedorLinks } from "./links";
@@ -58,6 +59,20 @@ function marcaAlegada(extracao: { remetente?: { marca?: string } }, marcas: Marc
   return encontrarMarcaAlegada(extracao.remetente?.marca, marcas);
 }
 
+function marcasCompativeis(alegada: Marca, encontrada: Marca): boolean {
+  if (alegada.id === encontrada.id) return true;
+  // Órgãos públicos federais (INSS, Receita, Banco Central etc.) usam o portal gov.br legitimamente.
+  if (alegada.categoria === "governo" && encontrada.id === "govbr") return true;
+  // Ecossistema Mercado Livre / Mercado Pago compartilha links entre si.
+  if (
+    (alegada.id === "mercadolivre" && encontrada.id === "mercadopago") ||
+    (alegada.id === "mercadopago" && encontrada.id === "mercadolivre")
+  ) {
+    return true;
+  }
+  return false;
+}
+
 /** Sinal `dominio_oficial`: o link é do site oficial da marca? */
 export function criarSinalDominioOficial(marcas: Marca[], resolverLinks: ResolvedorLinks): Sinal {
   return {
@@ -70,12 +85,51 @@ export function criarSinalDominioOficial(marcas: Marca[], resolverLinks: Resolve
         const vistos = new Set<string>();
         for (const u of urlsParaVerificar(links)) {
           const host = u.hostname.toLowerCase();
+          const hostLimpo = host.replace(/^\[|\]$/g, "");
+          const dominio = nomeExibido(dominioDe(host));
+
+          // Truque clássico de phishing: https://site-oficial.com@golpe.test/
+          if (u.username || u.password) {
+            out.push({
+              sinal: "dominio_oficial",
+              resultado: "alerta",
+              forca: "forte",
+              alvo: u.href,
+              descricao: `o link usa um truque no endereço (com @) para parecer outro site, mas leva para ${dominio}`,
+              detalhes: { credenciaisNaUrl: true, destinoReal: dominio },
+            });
+            continue;
+          }
+
+          // Sites oficiais de bancos, governo e lojas não usam IP literal no endereço
+          if (isIP(hostLimpo)) {
+            if (vistos.has(hostLimpo)) continue;
+            vistos.add(hostLimpo);
+            out.push({
+              sinal: "dominio_oficial",
+              resultado: "alerta",
+              forca: "forte",
+              alvo: hostLimpo,
+              descricao: "o link usa números (endereço IP) em vez de um nome de site, algo muito comum em golpes",
+              detalhes: { ipLiteral: true },
+            });
+            continue;
+          }
+
           if (ehEncurtador(host) || vistos.has(host)) continue;
           vistos.add(host);
           const a = analisarHost(host, marcas, alegada);
-          const dominio = nomeExibido(dominioDe(host));
           if (a.tipo === "oficial") {
-            if (a.marca.conferido) {
+            if (alegada && !marcasCompativeis(alegada, a.marca)) {
+              out.push({
+                sinal: "dominio_oficial",
+                resultado: "alerta",
+                forca: "moderada",
+                alvo: dominio,
+                marca: alegada.id,
+                descricao: `a mensagem diz ser da ${alegada.nomePopular}, mas o link leva para o site da ${a.marca.nomePopular} (${dominio})`,
+              });
+            } else if (a.marca.conferido) {
               out.push({
                 sinal: "dominio_oficial",
                 resultado: "confirmacao",

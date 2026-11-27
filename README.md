@@ -150,8 +150,8 @@ Telegram ──► Adaptador do canal ──► Núcleo de análise ──► Ve
 | Backend e site | Next.js (landing page + webhook do Telegram) | ✅ Decidido |
 | Modelo multimodal | Claude Haiku 5.5 vs. Claude Sonnet 5.5, comparados no conjunto de avaliação | ✅ Candidatos definidos |
 | Transcrição de áudio | Fora do MVP | ➡️ Próximo passo |
-| Consulta de domínios | RDAP (Registro.br para `.br`; bootstrap da IANA para as demais terminações) | ✅ Decidido |
-| Listas de phishing | Google Safe Browsing (principal) + feed comunitário do OpenPhish (consulta local) | ✅ Decidido _(conferir termos de uso)_ |
+| Consulta de domínios | RDAP (Registro.br para `.br`; bootstrap da IANA para as demais terminações), dispensado para domínios oficiais conferidos na base local | ✅ Decidido |
+| Listas de phishing | Google Safe Browsing (principal) + feed comunitário do OpenPhish em `dados/openphish.json` (atualizável via `npm run atualizar-openphish`) | ✅ Decidido _(conferir termos de uso)_ |
 | Hospedagem | Vercel, plano gratuito (conferir limite de tempo por requisição) | ✅ Decidido |
 | Limite de análises por usuário | Upstash Redis, plano gratuito (só ID do usuário e contador) | ✅ Decidido |
 
@@ -184,9 +184,10 @@ _(em breve: preenchido quando houver código)_
 npm install
 cp .env.example .env   # preencha as chaves
 npm run dev            # landing e webhook em http://localhost:3000
-npm test               # testes, sem rede
-npm run typecheck      # checagem de tipos
-npm run avaliar        # avaliação (chama a API do Claude; gasta cota)
+npm test                    # testes, sem rede
+npm run typecheck           # checagem de tipos
+npm run atualizar-openphish # atualiza o feed local do OpenPhish
+npm run avaliar             # avaliação (chama a API do Claude; gasta cota)
 ```
 
 ## Equipe

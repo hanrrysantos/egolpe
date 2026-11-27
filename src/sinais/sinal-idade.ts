@@ -101,7 +101,8 @@ export function criarSinalIdade(marcas: Marca[], resolverLinks: ResolvedorLinks)
           if (isIP(host.replace(/^\[|\]$/g, "")) || ehEncurtador(host)) continue;
           const d = getDomain(host);
           if (!d || !parse(d).isIcann) continue;
-          if (analisarHost(host, marcas).tipo === "oficial") continue;
+          const analise = analisarHost(host, marcas);
+          if (analise.tipo === "oficial" && analise.marca.conferido) continue;
           dominios.add(d);
         }
         const lista = [...dominios].slice(0, MAX_DOMINIOS);
