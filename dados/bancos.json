@@ -1,0 +1,751 @@
+[
+  {
+    "id": "bb",
+    "nome": "Banco do Brasil",
+    "nomePopular": "Banco do Brasil",
+    "categoria": "banco",
+    "dominios": [
+      "bb.com.br",
+      "bancobrasil.com.br"
+    ],
+    "palavrasChave": [
+      "bancodobrasil",
+      "bancobrasil",
+      "bb"
+    ],
+    "telefones": [
+      { "numero": "40040001", "descricao": "Central de Relacionamento (capitais e regiões metropolitanas)" },
+      { "numero": "08007290001", "descricao": "Central de Relacionamento (demais localidades)" },
+      { "numero": "08007290722", "descricao": "SAC 24h" },
+      { "numero": "08007295678", "descricao": "Ouvidoria" },
+      { "numero": "08007290088", "descricao": "Atendimento para deficientes auditivos ou de fala" }
+    ],
+    "codigoBanco": "001",
+    "conferido": true,
+    "fonte": "https://www.bb.com.br/site/atendimento/"
+  },
+  {
+    "id": "basa",
+    "nome": "Banco da Amazônia",
+    "nomePopular": "Banco da Amazônia",
+    "categoria": "banco",
+    "dominios": [
+      "bancoamazonia.com.br"
+    ],
+    "palavrasChave": [
+      "bancoamazonia",
+      "bancodaamazonia",
+      "basa"
+    ],
+    "telefones": [
+      { "numero": "40083888", "descricao": "Central de Atendimento ao Cliente" },
+      { "numero": "08007277228", "descricao": "SAC" },
+      { "numero": "08007211888", "descricao": "SAC para deficientes auditivos ou de fala" },
+      { "numero": "08007222171", "descricao": "Ouvidoria" },
+      { "numero": "08007441000", "descricao": "Canal de Denúncias" }
+    ],
+    "codigoBanco": "003",
+    "conferido": true,
+    "fonte": "https://www.bancoamazonia.com.br/"
+  },
+  {
+    "id": "bnb",
+    "nome": "Banco do Nordeste",
+    "nomePopular": "Banco do Nordeste",
+    "categoria": "banco",
+    "dominios": [
+      "bnb.gov.br"
+    ],
+    "palavrasChave": [
+      "bancodonordeste",
+      "bnb"
+    ],
+    "telefones": [
+      { "numero": "40200004", "descricao": "Central de Relacionamento (capitais e regiões metropolitanas)" },
+      { "numero": "08000330004", "descricao": "Central de Relacionamento (demais localidades)" },
+      { "numero": "08007283030", "descricao": "SAC 24h" },
+      { "numero": "08000333033", "descricao": "Ouvidoria" }
+    ],
+    "codigoBanco": "004",
+    "conferido": true,
+    "fonte": "https://www.bnb.gov.br/"
+  },
+  {
+    "id": "banestes",
+    "nome": "Banestes",
+    "nomePopular": "Banestes",
+    "categoria": "banco",
+    "dominios": [
+      "banestes.com.br"
+    ],
+    "palavrasChave": [
+      "banestes"
+    ],
+    "telefones": [
+      { "numero": "2733832030", "descricao": "Central de Atendimento (Grande Vitória)" },
+      { "numero": "08006452030", "descricao": "Central de Atendimento (demais localidades)" },
+      { "numero": "08006452060", "descricao": "Central de Atendimento Pessoa Jurídica" },
+      { "numero": "08007270474", "descricao": "SAC 24h" },
+      { "numero": "08007270030", "descricao": "Ouvidoria" },
+      { "numero": "08002823030", "descricao": "Atendimento para deficientes auditivos ou de fala" }
+    ],
+    "codigoBanco": "021",
+    "conferido": true,
+    "fonte": "https://www.banestes.com.br/"
+  },
+  {
+    "id": "santander",
+    "nome": "Banco Santander",
+    "nomePopular": "Santander",
+    "categoria": "banco",
+    "dominios": [
+      "santander.com.br"
+    ],
+    "palavrasChave": [
+      "santander"
+    ],
+    "telefones": [
+      { "numero": "40043535", "descricao": "Central de Atendimento PF (capitais e regiões metropolitanas)" },
+      { "numero": "08007023535", "descricao": "Central de Atendimento PF (demais localidades)" },
+      { "numero": "40042125", "descricao": "Central de Atendimento PJ (capitais e regiões metropolitanas)" },
+      { "numero": "08007262125", "descricao": "Central de Atendimento PJ (demais localidades)" },
+      { "numero": "08007627777", "descricao": "SAC 24h" },
+      { "numero": "08007710401", "descricao": "SAC para deficientes auditivos ou de fala" },
+      { "numero": "08007235007", "descricao": "Central para deficientes auditivos ou de fala" },
+      { "numero": "08007260322", "descricao": "Ouvidoria" },
+      { "numero": "08007710301", "descricao": "Ouvidoria para deficientes auditivos ou de fala" }
+    ],
+    "codigoBanco": "033",
+    "conferido": true,
+    "fonte": "https://www.santander.com.br/atendimento-para-voce/telefones-santander"
+  },
+  {
+    "id": "banrisul",
+    "nome": "Banrisul",
+    "nomePopular": "Banrisul",
+    "categoria": "banco",
+    "dominios": [
+      "banrisul.com.br"
+    ],
+    "palavrasChave": [
+      "banrisul"
+    ],
+    "telefones": [
+      { "numero": "5132100122", "descricao": "Banrifone (Porto Alegre)" },
+      { "numero": "08005418855", "descricao": "Banrifone (interior do RS e outros estados)" },
+      { "numero": "08006461515", "descricao": "SAC 24h" },
+      { "numero": "08006442200", "descricao": "Ouvidoria" },
+      { "numero": "5132151800", "descricao": "WhatsApp oficial" }
+    ],
+    "codigoBanco": "041",
+    "conferido": true,
+    "fonte": "https://www.banrisul.com.br/"
+  },
+  {
+    "id": "brb",
+    "nome": "BRB - Banco de Brasília",
+    "nomePopular": "BRB",
+    "categoria": "banco",
+    "dominios": [
+      "brb.com.br"
+    ],
+    "palavrasChave": [
+      "bancodebrasilia",
+      "brbcard",
+      "brb"
+    ],
+    "telefones": [
+      { "numero": "6133221515", "descricao": "BRB Telebanco (Distrito Federal)" },
+      { "numero": "40026161", "descricao": "BRB Telebanco (capitais e regiões metropolitanas)" },
+      { "numero": "08000613030", "descricao": "BRB Telebanco (demais localidades)" },
+      { "numero": "08006486161", "descricao": "SAC" },
+      { "numero": "08006421105", "descricao": "Ouvidoria" },
+      { "numero": "40034004", "descricao": "BRBCard (capitais e regiões metropolitanas)" },
+      { "numero": "08008804004", "descricao": "BRBCard (demais localidades)" }
+    ],
+    "codigoBanco": "070",
+    "conferido": true,
+    "fonte": "https://novo.brb.com.br/"
+  },
+  {
+    "id": "inter",
+    "nome": "Banco Inter",
+    "nomePopular": "Inter",
+    "categoria": "banco",
+    "dominios": [
+      "inter.co",
+      "bancointer.com.br"
+    ],
+    "palavrasChave": [
+      "bancointer"
+    ],
+    "telefones": [
+      { "numero": "30034070", "descricao": "Central de Atendimento (capitais e regiões metropolitanas)" },
+      { "numero": "08009400007", "descricao": "Central de Atendimento (demais localidades)" },
+      { "numero": "08009409999", "descricao": "SAC 24h" },
+      { "numero": "08009407772", "descricao": "Ouvidoria" }
+    ],
+    "codigoBanco": "077",
+    "conferido": true,
+    "fonte": "https://inter.co/canais-de-atendimento/"
+  },
+  {
+    "id": "xp",
+    "nome": "XP Investimentos (Banco XP)",
+    "nomePopular": "XP",
+    "categoria": "banco",
+    "dominios": [
+      "xpi.com.br"
+    ],
+    "palavrasChave": [
+      "xpinvestimentos",
+      "bancoxp",
+      "xpi"
+    ],
+    "telefones": [
+      { "numero": "40033710", "descricao": "Central de Atendimento (capitais e regiões metropolitanas)" },
+      { "numero": "40072377", "descricao": "Central de Atendimento (capitais e regiões metropolitanas)" },
+      { "numero": "08008803710", "descricao": "Central de Atendimento (demais localidades)" },
+      { "numero": "08007720202", "descricao": "SAC" },
+      { "numero": "08000000078", "descricao": "SAC" },
+      { "numero": "08007223730", "descricao": "Ouvidoria" },
+      { "numero": "08008784047", "descricao": "Ouvidoria" },
+      { "numero": "1149352720", "descricao": "WhatsApp oficial" }
+    ],
+    "codigoBanco": "102",
+    "conferido": true,
+    "fonte": "https://www.xpi.com.br/atendimento/"
+  },
+  {
+    "id": "caixa",
+    "nome": "Caixa Econômica Federal",
+    "nomePopular": "Caixa",
+    "categoria": "banco",
+    "dominios": [
+      "caixa.gov.br"
+    ],
+    "palavrasChave": [
+      "caixa",
+      "cef",
+      "caixaeconomica",
+      "caixatem",
+      "fgts"
+    ],
+    "telefones": [
+      { "numero": "40040104", "descricao": "Alô CAIXA (capitais e regiões metropolitanas)" },
+      { "numero": "08001040104", "descricao": "Alô CAIXA (demais regiões)" },
+      { "numero": "08007260101", "descricao": "SAC CAIXA" },
+      { "numero": "08007260207", "descricao": "CAIXA Cidadão (PIS, FGTS e benefícios sociais)" },
+      { "numero": "08007257474", "descricao": "Ouvidoria CAIXA" },
+      { "numero": "111", "descricao": "Atendimento Bolsa Família" }
+    ],
+    "codigoBanco": "104",
+    "conferido": true,
+    "fonte": "https://www.caixa.gov.br/atendimento/"
+  },
+  {
+    "id": "agibank",
+    "nome": "Agibank",
+    "nomePopular": "Agibank",
+    "categoria": "banco",
+    "dominios": [
+      "agibank.com.br"
+    ],
+    "palavrasChave": [
+      "agibank"
+    ],
+    "telefones": [
+      { "numero": "30042221", "descricao": "Central de Relacionamento e WhatsApp oficial (capitais e regiões metropolitanas)" },
+      { "numero": "08006020022", "descricao": "Central de Relacionamento (demais localidades)" },
+      { "numero": "08007300999", "descricao": "SAC 24h" },
+      { "numero": "08006012202", "descricao": "Ouvidoria" }
+    ],
+    "codigoBanco": "121",
+    "conferido": true,
+    "fonte": "https://agibank.com.br/fale-conosco/"
+  },
+  {
+    "id": "stone",
+    "nome": "Stone Pagamentos",
+    "nomePopular": "Stone",
+    "categoria": "banco",
+    "dominios": [
+      "stone.com.br"
+    ],
+    "palavrasChave": [
+      "stonepagamentos",
+      "contastone"
+    ],
+    "telefones": [
+      { "numero": "30049680", "descricao": "Atendimento e WhatsApp oficial (capitais e regiões metropolitanas)" },
+      { "numero": "08003260506", "descricao": "Atendimento (demais localidades)" },
+      { "numero": "30049681", "descricao": "Vendas e informações" },
+      { "numero": "08009422174", "descricao": "Ouvidoria" }
+    ],
+    "codigoBanco": "197",
+    "conferido": true,
+    "fonte": "https://www.stone.com.br/contato/"
+  },
+  {
+    "id": "btg",
+    "nome": "BTG Pactual",
+    "nomePopular": "BTG Pactual",
+    "categoria": "banco",
+    "dominios": [
+      "btgpactual.com"
+    ],
+    "palavrasChave": [
+      "btgpactual",
+      "btg"
+    ],
+    "telefones": [
+      { "numero": "40072511", "descricao": "Central de Atendimento (capitais e regiões metropolitanas)" },
+      { "numero": "08000012511", "descricao": "Central de Atendimento (demais localidades)" },
+      { "numero": "08007722827", "descricao": "SAC 24h" },
+      { "numero": "08000474335", "descricao": "SAC para deficientes auditivos ou de fala" },
+      { "numero": "08007220048", "descricao": "Ouvidoria" }
+    ],
+    "codigoBanco": "208",
+    "conferido": true,
+    "fonte": "https://www.btgpactual.com/atendimento"
+  },
+  {
+    "id": "original",
+    "nome": "Banco Original",
+    "nomePopular": "Banco Original",
+    "categoria": "banco",
+    "dominios": [
+      "original.com.br"
+    ],
+    "palavrasChave": [
+      "bancooriginal"
+    ],
+    "telefones": [
+      { "numero": "08007330733", "descricao": "SAC 24h" },
+      { "numero": "08007550755", "descricao": "Ouvidoria" },
+      { "numero": "08000258000", "descricao": "Atendimento geral 24h" }
+    ],
+    "codigoBanco": "212",
+    "conferido": true,
+    "fonte": "https://www.original.com.br/"
+  },
+  {
+    "id": "bradesco",
+    "nome": "Bradesco",
+    "nomePopular": "Bradesco",
+    "categoria": "banco",
+    "dominios": [
+      "bradesco.com.br",
+      "banco.bradesco"
+    ],
+    "palavrasChave": [
+      "bradesco"
+    ],
+    "telefones": [
+      { "numero": "40020022", "descricao": "Fone Fácil Bradesco (capitais e regiões metropolitanas)" },
+      { "numero": "08005700022", "descricao": "Fone Fácil Bradesco (demais regiões)" },
+      { "numero": "08007048383", "descricao": "SAC Alô Bradesco 24h" },
+      { "numero": "08007220099", "descricao": "Atendimento para deficiência auditiva ou de fala" },
+      { "numero": "08007279933", "descricao": "Ouvidoria Bradesco" }
+    ],
+    "codigoBanco": "237",
+    "conferido": true,
+    "fonte": "https://banco.bradesco/html/classic/atendimento/fale-conosco/index.shtm"
+  },
+  {
+    "id": "nubank",
+    "nome": "Nubank",
+    "nomePopular": "Nubank",
+    "categoria": "banco",
+    "dominios": [
+      "nubank.com.br",
+      "nu.com.br"
+    ],
+    "palavrasChave": [
+      "nubank"
+    ],
+    "telefones": [
+      { "numero": "40200185", "descricao": "Atendimento 24h (capitais e regiões metropolitanas)" },
+      { "numero": "08005912117", "descricao": "Atendimento 24h / SAC (demais localidades)" },
+      { "numero": "08008870463", "descricao": "Ouvidoria" }
+    ],
+    "codigoBanco": "260",
+    "conferido": true,
+    "fonte": "https://nubank.com.br/contato/"
+  },
+  {
+    "id": "pagbank",
+    "nome": "PagBank (PagSeguro)",
+    "nomePopular": "PagBank",
+    "categoria": "banco",
+    "dominios": [
+      "pagbank.com.br",
+      "pagseguro.com.br",
+      "pagseguro.uol.com.br"
+    ],
+    "palavrasChave": [
+      "pagbank",
+      "pagseguro"
+    ],
+    "telefones": [
+      { "numero": "40031775", "descricao": "Central de Atendimento 24h (capitais e regiões metropolitanas)" },
+      { "numero": "08007282174", "descricao": "Central de Atendimento 24h (demais localidades)" },
+      { "numero": "08007282027", "descricao": "SAC 24h" },
+      { "numero": "08007282167", "descricao": "Ouvidoria" },
+      { "numero": "30044770", "descricao": "Denúncias de fraudes 24h" },
+      { "numero": "40036624", "descricao": "Televendas (capitais e regiões metropolitanas)" },
+      { "numero": "08008821100", "descricao": "Televendas (demais localidades)" }
+    ],
+    "codigoBanco": "290",
+    "conferido": true,
+    "fonte": "https://pagbank.com.br/atendimento"
+  },
+  {
+    "id": "bmg",
+    "nome": "Banco Bmg",
+    "nomePopular": "Banco Bmg",
+    "categoria": "banco",
+    "dominios": [
+      "bancobmg.com.br"
+    ],
+    "palavrasChave": [
+      "bancobmg",
+      "bmg"
+    ],
+    "telefones": [
+      { "numero": "08007701790", "descricao": "Central de Relacionamento 24h" },
+      { "numero": "08009799099", "descricao": "SAC 24h" },
+      { "numero": "40027007", "descricao": "WhatsApp oficial" },
+      { "numero": "08007232044", "descricao": "Ouvidoria" },
+      { "numero": "08002863636", "descricao": "Renegociação de dívidas" }
+    ],
+    "codigoBanco": "318",
+    "conferido": true,
+    "fonte": "https://www.bancobmg.com.br/atendimento/"
+  },
+  {
+    "id": "mercadopago",
+    "nome": "Mercado Pago",
+    "nomePopular": "Mercado Pago",
+    "categoria": "banco",
+    "dominios": [
+      "mercadopago.com.br",
+      "mercadopago.com"
+    ],
+    "palavrasChave": [
+      "mercadopago"
+    ],
+    "telefones": [
+      { "numero": "08006377246", "descricao": "SAC / Suporte geral" },
+      { "numero": "08006502121", "descricao": "Atendimento para deficientes auditivos e de fala" }
+    ],
+    "codigoBanco": "323",
+    "conferido": true,
+    "fonte": "https://www.mercadopago.com.br/ajuda"
+  },
+  {
+    "id": "c6",
+    "nome": "C6 Bank",
+    "nomePopular": "C6 Bank",
+    "categoria": "banco",
+    "dominios": [
+      "c6bank.com.br"
+    ],
+    "palavrasChave": [
+      "c6bank",
+      "c6"
+    ],
+    "telefones": [
+      { "numero": "30036116", "descricao": "Central de Relacionamento 24h (capitais e regiões metropolitanas)" },
+      { "numero": "08006606116", "descricao": "Central de Relacionamento 24h (demais localidades)" },
+      { "numero": "08006600060", "descricao": "SAC 24h" },
+      { "numero": "08006606060", "descricao": "Ouvidoria" },
+      { "numero": "1128326088", "descricao": "WhatsApp oficial PF" }
+    ],
+    "codigoBanco": "336",
+    "conferido": true,
+    "fonte": "https://www.c6bank.com.br/atendimento/"
+  },
+  {
+    "id": "itau",
+    "nome": "Itaú Unibanco",
+    "nomePopular": "Itaú",
+    "categoria": "banco",
+    "dominios": [
+      "itau.com.br",
+      "itau.com"
+    ],
+    "palavrasChave": [
+      "itau"
+    ],
+    "telefones": [
+      { "numero": "40044828", "descricao": "Central de Atendimento 24h e WhatsApp oficial (capitais e regiões metropolitanas)" },
+      { "numero": "08009704828", "descricao": "Central de Atendimento 24h (demais localidades)" },
+      { "numero": "08007280728", "descricao": "SAC 24h" },
+      { "numero": "08005700011", "descricao": "Ouvidoria" }
+    ],
+    "codigoBanco": "341",
+    "conferido": true,
+    "fonte": "https://www.itau.com.br/atendimento-itau/para-voce/telefones/"
+  },
+  {
+    "id": "efi",
+    "nome": "Efí Bank (Gerencianet)",
+    "nomePopular": "Efí Bank",
+    "categoria": "banco",
+    "dominios": [
+      "sejaefi.com.br",
+      "gerencianet.com.br"
+    ],
+    "palavrasChave": [
+      "sejaefi",
+      "efibank",
+      "gerencianet",
+      "efi"
+    ],
+    "telefones": [
+      { "numero": "08009412343", "descricao": "Atendimento (todas as regiões)" },
+      { "numero": "40001234", "descricao": "Atendimento (capitais e regiões metropolitanas)" },
+      { "numero": "1123942208", "descricao": "Atendimento (São Paulo e região)" },
+      { "numero": "3136030822", "descricao": "WhatsApp oficial" },
+      { "numero": "08009400361", "descricao": "Ouvidoria" }
+    ],
+    "codigoBanco": "364",
+    "conferido": true,
+    "fonte": "https://sejaefi.com.br/central-de-ajuda"
+  },
+  {
+    "id": "picpay",
+    "nome": "PicPay",
+    "nomePopular": "PicPay",
+    "categoria": "banco",
+    "dominios": [
+      "picpay.com"
+    ],
+    "palavrasChave": [
+      "picpay"
+    ],
+    "telefones": [
+      { "numero": "08000258000", "descricao": "SAC e Central de Atendimento PF 24h" },
+      { "numero": "08000252000", "descricao": "Ouvidoria" },
+      { "numero": "40033163", "descricao": "PicPay Empresas (capitais e regiões metropolitanas)" },
+      { "numero": "08008823163", "descricao": "PicPay Empresas (demais localidades)" }
+    ],
+    "codigoBanco": "380",
+    "conferido": true,
+    "fonte": "https://picpay.com/central-de-ajuda"
+  },
+  {
+    "id": "cora",
+    "nome": "Banco Cora",
+    "nomePopular": "Cora",
+    "categoria": "banco",
+    "dominios": [
+      "cora.com.br"
+    ],
+    "palavrasChave": [
+      "bancocora"
+    ],
+    "telefones": [
+      { "numero": "08005912350", "descricao": "SAC" },
+      { "numero": "1147372672", "descricao": "SAC (capitais e regiões metropolitanas)" },
+      { "numero": "11933058198", "descricao": "WhatsApp oficial 24h" },
+      { "numero": "08005912431", "descricao": "Ouvidoria" }
+    ],
+    "codigoBanco": "403",
+    "conferido": true,
+    "fonte": "https://www.cora.com.br/fale-conosco/"
+  },
+  {
+    "id": "safra",
+    "nome": "Banco Safra",
+    "nomePopular": "Safra",
+    "categoria": "banco",
+    "dominios": [
+      "safra.com.br",
+      "safrafinanceira.com.br"
+    ],
+    "palavrasChave": [
+      "safra",
+      "safrafinanceira"
+    ],
+    "telefones": [
+      { "numero": "1132534455", "descricao": "Central de Atendimento PF (Capital e Grande SP)" },
+      { "numero": "03001051234", "descricao": "Central de Atendimento PF (demais localidades)" },
+      { "numero": "08007725755", "descricao": "SAC 24h" },
+      { "numero": "08007724136", "descricao": "SAC para deficientes auditivos ou de fala" },
+      { "numero": "40014460", "descricao": "Cartões Safra (Capital e Grande SP)" },
+      { "numero": "08007284460", "descricao": "Cartões Safra (demais localidades)" },
+      { "numero": "30039039", "descricao": "Safra Financeira (capitais e grandes centros)" },
+      { "numero": "08007229039", "descricao": "Safra Financeira (demais localidades)" },
+      { "numero": "08007701236", "descricao": "Ouvidoria" },
+      { "numero": "08007277555", "descricao": "Ouvidoria para deficientes auditivos ou de fala" },
+      { "numero": "1126509974", "descricao": "WhatsApp oficial PF" },
+      { "numero": "1126509999", "descricao": "WhatsApp oficial Safra Financeira" }
+    ],
+    "codigoBanco": "422",
+    "conferido": true,
+    "fonte": "https://www.safra.com.br/atendimento/atendimento-ao-cliente.htm"
+  },
+  {
+    "id": "asaas",
+    "nome": "Asaas",
+    "nomePopular": "Asaas",
+    "categoria": "banco",
+    "dominios": [
+      "asaas.com",
+      "asaas.com.br"
+    ],
+    "palavrasChave": [
+      "asaas"
+    ],
+    "telefones": [
+      { "numero": "08000090037", "descricao": "Atendimento telefônico e WhatsApp oficial" }
+    ],
+    "codigoBanco": "461",
+    "conferido": true,
+    "fonte": "https://www.asaas.com/"
+  },
+  {
+    "id": "neon",
+    "nome": "Banco Neon",
+    "nomePopular": "Neon",
+    "categoria": "banco",
+    "dominios": [
+      "neon.com.br"
+    ],
+    "palavrasChave": [
+      "banconeon",
+      "neonpagamentos"
+    ],
+    "telefones": [
+      { "numero": "08005806255", "descricao": "SAC" },
+      { "numero": "08002227777", "descricao": "Negociação de dívidas" },
+      { "numero": "08008820652", "descricao": "Ouvidoria" },
+      { "numero": "1148619354", "descricao": "WhatsApp oficial 24h" },
+      { "numero": "1148619331", "descricao": "WhatsApp suporte técnico" }
+    ],
+    "codigoBanco": "536",
+    "conferido": true,
+    "fonte": "https://neon.com.br/ajuda"
+  },
+  {
+    "id": "bancopan",
+    "nome": "Banco Pan",
+    "nomePopular": "Banco Pan",
+    "categoria": "banco",
+    "dominios": [
+      "bancopan.com.br"
+    ],
+    "palavrasChave": [
+      "bancopan"
+    ],
+    "telefones": [
+      { "numero": "40030101", "descricao": "Cartão de Crédito, Conta Digital e WhatsApp oficial (capitais e regiões metropolitanas)" },
+      { "numero": "08008880101", "descricao": "Cartão de Crédito e Conta Digital (demais localidades)" },
+      { "numero": "08007768000", "descricao": "SAC 24h" },
+      { "numero": "40021687", "descricao": "Financiamento e Consignado (capitais e regiões metropolitanas)" },
+      { "numero": "08007758686", "descricao": "Financiamento e Consignado (demais localidades)" },
+      { "numero": "08007769595", "descricao": "Ouvidoria" }
+    ],
+    "codigoBanco": "623",
+    "conferido": true,
+    "fonte": "https://www.bancopan.com.br/atendimento/"
+  },
+  {
+    "id": "bv",
+    "nome": "Banco BV (Votorantim)",
+    "nomePopular": "Banco BV",
+    "categoria": "banco",
+    "dominios": [
+      "bv.com.br"
+    ],
+    "palavrasChave": [
+      "bancobv",
+      "votorantim",
+      "bv"
+    ],
+    "telefones": [
+      { "numero": "30031616", "descricao": "Central de Relacionamento (capitais e regiões metropolitanas)" },
+      { "numero": "08007018600", "descricao": "Central de Relacionamento (demais localidades)" },
+      { "numero": "08007018661", "descricao": "SAC 24h" },
+      { "numero": "08007728028", "descricao": "Atendimento conta digital e cartões (não clientes)" },
+      { "numero": "08007703335", "descricao": "Atendimento financiamentos e empréstimos (não clientes)" }
+    ],
+    "codigoBanco": "655",
+    "conferido": true,
+    "fonte": "https://www.bv.com.br/atendimento"
+  },
+  {
+    "id": "daycoval",
+    "nome": "Banco Daycoval",
+    "nomePopular": "Daycoval",
+    "categoria": "banco",
+    "dominios": [
+      "daycoval.com.br"
+    ],
+    "palavrasChave": [
+      "daycoval"
+    ],
+    "telefones": [
+      { "numero": "08007750500", "descricao": "SAC 24h" },
+      { "numero": "08008806158", "descricao": "SAC Cartão de Crédito" },
+      { "numero": "03001110500", "descricao": "Central de Atendimento ao Cliente" },
+      { "numero": "40902223", "descricao": "Central de Atendimento ao Cliente" },
+      { "numero": "08007752005", "descricao": "Atendimento para deficientes auditivos ou de fala" },
+      { "numero": "11991116583", "descricao": "WhatsApp oficial" },
+      { "numero": "08007770900", "descricao": "Ouvidoria" }
+    ],
+    "codigoBanco": "707",
+    "conferido": true,
+    "fonte": "https://www.daycoval.com.br/atendimento"
+  },
+  {
+    "id": "sicredi",
+    "nome": "Sicredi",
+    "nomePopular": "Sicredi",
+    "categoria": "banco",
+    "dominios": [
+      "sicredi.com.br"
+    ],
+    "palavrasChave": [
+      "sicredi"
+    ],
+    "telefones": [
+      { "numero": "30034770", "descricao": "Central de Relacionamento (capitais e regiões metropolitanas)" },
+      { "numero": "08007244770", "descricao": "Central de Relacionamento (demais regiões)" },
+      { "numero": "08007247220", "descricao": "SAC 24h" },
+      { "numero": "08007240525", "descricao": "SAC para deficientes auditivos ou de fala" },
+      { "numero": "08006462519", "descricao": "Ouvidoria" },
+      { "numero": "5133584770", "descricao": "WhatsApp oficial" }
+    ],
+    "codigoBanco": "748",
+    "conferido": true,
+    "fonte": "https://www.sicredi.com.br/site/fale-conosco/"
+  },
+  {
+    "id": "sicoob",
+    "nome": "Sicoob",
+    "nomePopular": "Sicoob",
+    "categoria": "banco",
+    "dominios": [
+      "sicoob.com.br"
+    ],
+    "palavrasChave": [
+      "sicoob",
+      "sicoobcard"
+    ],
+    "telefones": [
+      { "numero": "40001111", "descricao": "Central de Atendimento e WhatsApp oficial (capitais e regiões metropolitanas)" },
+      { "numero": "08006420000", "descricao": "Central de Atendimento (demais localidades)" },
+      { "numero": "08007244420", "descricao": "SAC 24h" },
+      { "numero": "08007250996", "descricao": "Ouvidoria" },
+      { "numero": "08009400458", "descricao": "Ouvidoria para deficientes auditivos ou de fala" },
+      { "numero": "40071256", "descricao": "Sicoobcard (capitais e regiões metropolitanas)" },
+      { "numero": "08007020756", "descricao": "Sicoobcard (demais localidades)" }
+    ],
+    "codigoBanco": "756",
+    "conferido": true,
+    "fonte": "https://www.sicoob.com.br/web/sicoob/fale-conosco"
+  }
+]

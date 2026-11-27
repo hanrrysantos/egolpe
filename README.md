@@ -69,8 +69,8 @@ O **É golpe?** funciona onde a pessoa já está: numa conversa de mensagens. N�
 1. **A pessoa envia** o que recebeu: texto colado, print da conversa ou link. Se a pessoa mandar um áudio, o bot explica que, por enquanto, só entende texto e print.
 2. **O bot extrai** do conteúdo o que importa: links, chaves Pix, linha digitável de boleto, telefones e quem a mensagem diz ser.
 3. **O bot verifica fatos** que um chatbot comum não verifica:
-   - idade do domínio e semelhança com sites de bancos, governo e lojas conhecidas (lista de referência com cerca de 40 domínios oficiais, conferidos à mão);
-   - se o telefone para "ligar para a central" é o número oficial do banco;
+   - idade do domínio e semelhança com sites de bancos, governo e lojas conhecidas (base local com **32 instituições bancárias e de pagamento** conferidas — domínios, telefones oficiais e códigos de compensação — além das marcas de governo, entregas e lojas, evitando consultas externas desnecessárias);
+   - se o telefone para "ligar para a central" é o número oficial do banco (validado localmente na base bancária);
    - destino real de links encurtados;
    - presença em listas públicas de phishing;
    - no boleto, se o banco codificado na linha digitável bate com o emissor alegado.
