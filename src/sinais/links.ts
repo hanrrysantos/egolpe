@@ -6,13 +6,18 @@ export const ENCURTADORES = new Set([
   "bit.ly", "tinyurl.com", "cutt.ly", "encurtador.com.br", "t.co", "is.gd", "rebrand.ly", "s.id", "l1nk.dev",
   "goo.gl", "ow.ly", "buff.ly", "t.ly", "shorturl.at", "tiny.cc", "bl.ink", "rb.gy", "v.gd", "migre.me", "x.co",
   "wa.link", "qrco.de", "lnkd.in", "cli.re", "u.to",
+  "shre.ink", "abre.ai", "l1nq.com", "encr.pw", "bityli.com", "curt.link", "short.gy", "dub.sh", "bitly.cx",
+  "tinyurl.is", "tiny.one", "gg.gg", "ln.run",
 ]);
 
 export const MAX_LINKS = 5;
 
-/** Normaliza um link da extração: sem esquema vira http://; só http/https. */
+/** Caracteres invisíveis que golpistas inserem em URLs para driblar filtros. */
+const CARACTERES_INVISIVEIS = /[\u200B-\u200D\uFEFF\u00AD]/g;
+
+/** Normaliza um link da extração: remove caracteres invisíveis, sem esquema vira http://; só http/https. */
 export function normalizarLink(bruto: string): URL | null {
-  let s = bruto.trim().replace(/[.,;:!?)\]}>"']+$/, "");
+  let s = bruto.replace(CARACTERES_INVISIVEIS, "").trim().replace(/[.,;:!?)\]}>"']+$/, "");
   if (!s) return null;
   if (/^[a-z][a-z0-9+.-]*:/i.test(s) && !/^https?:\/\//i.test(s) && !/^[^/\s]+:\d+(\/|$)/.test(s)) return null;
   if (!/^https?:\/\//i.test(s)) s = "http://" + s.replace(/^\/\//, "");

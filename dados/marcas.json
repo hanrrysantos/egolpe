@@ -266,7 +266,8 @@
       "govbr"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.gov.br/"
   },
   {
     "id": "inss",
@@ -281,7 +282,8 @@
       "meuinss"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.gov.br/inss/"
   },
   {
     "id": "receita",
@@ -296,7 +298,8 @@
       "receitafederal"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.gov.br/receitafederal/"
   },
   {
     "id": "bcb",
@@ -312,7 +315,8 @@
       "bcb"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.bcb.gov.br/"
   },
   {
     "id": "detran",
@@ -320,24 +324,47 @@
     "nomePopular": "Detran",
     "categoria": "governo",
     "dominios": [
-      "detran.sp.gov.br",
-      "detran.rj.gov.br",
-      "detran.mg.gov.br",
-      "detran.pr.gov.br",
+      "detran.ac.gov.br",
+      "detran.al.gov.br",
+      "detran.am.gov.br",
+      "detran.ap.gov.br",
       "detran.ba.gov.br",
-      "detran.rs.gov.br"
+      "detran.ce.gov.br",
+      "detran.df.gov.br",
+      "detran.es.gov.br",
+      "detran.go.gov.br",
+      "detran.ma.gov.br",
+      "detran.mg.gov.br",
+      "transito.mg.gov.br",
+      "detran.ms.gov.br",
+      "detran.mt.gov.br",
+      "detran.pa.gov.br",
+      "detran.pb.gov.br",
+      "detran.pe.gov.br",
+      "detran.pi.gov.br",
+      "detran.pr.gov.br",
+      "detran.rj.gov.br",
+      "detran.rn.gov.br",
+      "detran.ro.gov.br",
+      "detran.rr.gov.br",
+      "detran.rs.gov.br",
+      "detran.sc.gov.br",
+      "detran.se.gov.br",
+      "detran.sp.gov.br",
+      "detran.to.gov.br"
     ],
     "palavrasChave": [
       "detran"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.gov.br/transportes/pt-br/assuntos/transito/senatran"
   },
   {
     "id": "serasa",
     "nome": "Serasa",
     "nomePopular": "Serasa",
-    "categoria": "governo",
+    "categoria": "outro",
     "dominios": [
       "serasa.com.br",
       "serasaconsumidor.com.br"
@@ -346,7 +373,8 @@
       "serasa"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.serasa.com.br/"
   },
   {
     "id": "tse",
@@ -360,7 +388,8 @@
       "tse"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.tse.jus.br/"
   },
   {
     "id": "correios",
@@ -375,7 +404,8 @@
       "sedex"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.correios.com.br/"
   },
   {
     "id": "jadlog",
@@ -389,7 +419,8 @@
       "jadlog"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.jadlog.com.br/"
   },
   {
     "id": "loggi",
@@ -403,7 +434,8 @@
       "loggi"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.loggi.com/"
   },
   {
     "id": "totalexpress",
@@ -417,7 +449,8 @@
       "totalexpress"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.totalexpress.com.br/"
   },
   {
     "id": "dhl",
@@ -431,7 +464,8 @@
       "dhl"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.dhl.com/br-pt/home.html"
   },
   {
     "id": "fedex",
@@ -445,7 +479,8 @@
       "fedex"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.fedex.com/pt-br/home.html"
   },
   {
     "id": "ups",
@@ -459,7 +494,8 @@
       "ups"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.ups.com/br/pt/Home.page"
   },
   {
     "id": "azulcargo",
@@ -467,13 +503,18 @@
     "nomePopular": "Azul Cargo",
     "categoria": "entrega",
     "dominios": [
+      "azulcargoexpress.com.br",
+      "azullogistica.com.br",
       "azulcargo.com.br"
     ],
     "palavrasChave": [
-      "azulcargo"
+      "azulcargo",
+      "azulcargoexpress",
+      "azullogistica"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.azulcargoexpress.com.br/"
   },
   {
     "id": "mercadolivre",
@@ -490,7 +531,8 @@
       "mercadolibre"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.mercadolivre.com.br/"
   },
   {
     "id": "amazon",
@@ -505,7 +547,8 @@
       "amazon"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.amazon.com.br/"
   },
   {
     "id": "shopee",
@@ -519,7 +562,8 @@
       "shopee"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://shopee.com.br/"
   },
   {
     "id": "magalu",
@@ -535,7 +579,8 @@
       "magazineluiza"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.magazineluiza.com.br/"
   },
   {
     "id": "americanas",
@@ -550,7 +595,8 @@
       "americanas"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.americanas.com.br/"
   },
   {
     "id": "casasbahia",
@@ -564,7 +610,8 @@
       "casasbahia"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.casasbahia.com.br/"
   },
   {
     "id": "aliexpress",
@@ -578,7 +625,8 @@
       "aliexpress"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://pt.aliexpress.com/"
   },
   {
     "id": "shein",
@@ -592,7 +640,8 @@
       "shein"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://br.shein.com/"
   },
   {
     "id": "carrefour",
@@ -606,7 +655,8 @@
       "carrefour"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.carrefour.com.br/"
   },
   {
     "id": "havan",
@@ -620,7 +670,8 @@
       "havan"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.havan.com.br/"
   },
   {
     "id": "kabum",
@@ -634,7 +685,8 @@
       "kabum"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.kabum.com.br/"
   },
   {
     "id": "netshoes",
@@ -648,6 +700,7 @@
       "netshoes"
     ],
     "telefones": [],
-    "conferido": false
+    "conferido": true,
+    "fonte": "https://www.netshoes.com.br/"
   }
 ]

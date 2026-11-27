@@ -87,7 +87,10 @@ const HOSPEDAGEM_COMPARTILHADA = new Set([
   "docs.google.com", "sites.google.com", "drive.google.com", "forms.gle", "forms.google.com", "storage.googleapis.com",
   "firebaseapp.com", "web.app", "github.io", "githubusercontent.com", "vercel.app", "netlify.app", "pages.dev", "workers.dev",
   "herokuapp.com", "blogspot.com", "wixsite.com", "weebly.com", "notion.site", "onrender.com", "glitch.me", "000webhostapp.com",
-  "typeform.com", "canva.com", "wordpress.com", "bit.ly", "amazonaws.com", "azurewebsites.net", "r2.dev",
+  "typeform.com", "canva.com", "wordpress.com", "bit.ly", "tinyurl.com", "t.co", "cutt.ly",
+  "amazonaws.com", "azurewebsites.net", "r2.dev",
+  "linktr.ee", "carrd.co", "webflow.io", "framer.website", "replit.app", "supabase.co",
+  "sharepoint.com", "onedrive.live.com", "dropbox.com",
 ]);
 
 export function hostCompartilhado(host: string): boolean {
