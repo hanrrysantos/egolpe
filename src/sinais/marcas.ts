@@ -1,9 +1,28 @@
 import { domainToUnicode } from "node:url";
 import { parse } from "tldts";
 import type { Marca } from "@/src/nucleo/tipos";
+import bancosJson from "@/dados/bancos.json";
 import marcasJson from "@/dados/marcas.json";
 
-export const MARCAS: Marca[] = marcasJson as unknown as Marca[];
+/** Base dedicada de instituições bancárias e de pagamento (consultada localmente para evitar buscas na web). */
+export const BANCOS: Marca[] = bancosJson as unknown as Marca[];
+
+const idsBancos = new Set(BANCOS.map((b) => b.id));
+const outrasMarcas = (marcasJson as unknown as Marca[]).filter((m) => !idsBancos.has(m.id));
+
+/** Base completa: instituições bancárias conferidas + demais marcas (governo, entrega, lojas). */
+export const MARCAS: Marca[] = [...BANCOS, ...outrasMarcas];
+
+/** Busca local por código COMPE (3 dígitos) na base de instituições bancárias. */
+export function buscarBancoPorCodigo(codigo: string, bancos: Marca[] = BANCOS): Marca | undefined {
+  const c = codigo.replace(/\D/g, "").padStart(3, "0");
+  return bancos.find((b) => b.codigoBanco === c);
+}
+
+/** Busca local por nome/apelido na base de instituições bancárias. */
+export function buscarBancoPorNome(texto: string | undefined, bancos: Marca[] = BANCOS): Marca | undefined {
+  return encontrarMarcaAlegada(texto, bancos);
+}
 
 export function normalizar(s: string): string {
   return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
@@ -85,8 +104,13 @@ function ehOficial(host: string, marcas: Marca[]): Marca | undefined {
 }
 
 function palavrasDa(m: Marca): string[] {
-  const nomesDominio = m.dominios.map((d) => parse(d).domainWithoutSuffix ?? "").filter((x) => x.length > 0);
-  return [...new Set([...m.palavrasChave, ...nomesDominio].map((p) => normalizar(p).replace(/[^a-z0-9]/g, "")).filter(Boolean))];
+  // Quando a marca define palavrasChave curadas, usa só elas para evitar falsos positivos
+  // com nomes de domínio que coincidem com palavras comuns (ex.: inter.co -> internet, cora.com.br -> decoracao).
+  const fonte =
+    m.palavrasChave.length > 0
+      ? m.palavrasChave
+      : m.dominios.map((d) => parse(d).domainWithoutSuffix ?? "").filter((x) => x.length > 0);
+  return [...new Set(fonte.map((p) => normalizar(p).replace(/[^a-z0-9]/g, "")).filter(Boolean))];
 }
 
 function casaPalavra(kw: string, tokens: string[], junto: string): boolean {

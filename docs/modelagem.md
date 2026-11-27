@@ -15,6 +15,7 @@ flowchart LR
   N --> Y[src/sintese<br/>Claude]
   N --> G[src/nucleo/guardas.ts]
   G -->|o_que_fazer| RT[(dados/roteiros.json)]
+  S --> B[(dados/bancos.json)]
   S --> M[(dados/marcas.json)]
   S --> X[RDAP · Safe Browsing · OpenPhish · encurtadores]
   N -->|Veredito| A
@@ -61,7 +62,7 @@ sequenceDiagram
 | `Sinal` | Interface de cada verificação: `verificar(extracao, ctx)`, nunca lança | sinais | `verificarSinais` |
 | `ResultadoSintese` | Nível, tipo e motivos escolhidos pelo modelo | síntese | guardas |
 | `Veredito` | Contrato com os adaptadores (`nivel`, `tipo`, `motivos`, `o_que_fazer`) | guardas | adaptadores |
-| `Marca` | Domínios oficiais, nome popular, palavras-chave, telefones, código do banco | `dados/marcas.json` | sinais |
+| `Marca` | Domínios oficiais, nome popular, palavras-chave, telefones, código do banco | `dados/bancos.json` e `dados/marcas.json` | sinais |
 | `Roteiro` | Passos `antes` e `depois` por tipo de golpe | `dados/roteiros.json` | guardas, adaptador |
 | `CasoDeAvaliacao` | Caso sintético com nível e tipo esperados | `avaliacao/casos.json` | `avaliacao/rodar.ts` |
 
@@ -96,7 +97,8 @@ Nada do conteúdo do usuário é persistido. O que existe:
 |---|---|---|
 | Redis | `limite:u:<idTelegram>:<AAAAMMDDHH>` → contador | expira em 1 h |
 | Redis | `limite:bot:<AAAAMMDD>` → contador | expira em 24 h |
-| `dados/marcas.json` | base de referência de marcas | mantido à mão |
+| `dados/bancos.json` | base dedicada de instituições bancárias e de pagamento (domínios, telefones oficiais e códigos COMPE conferidos) | mantido à mão |
+| `dados/marcas.json` | base de referência de marcas (governo, entregas e lojas) | mantido à mão |
 | `dados/roteiros.json` | roteiros por tipo | revisado pela equipe |
 | `dados/openphish.json` | feed comunitário do OpenPhish (importado no bundle) | `npx tsx scripts/atualizar-openphish.ts` |
 | `avaliacao/casos.json` | casos sintéticos | mantido pela avaliação |
@@ -108,6 +110,6 @@ Nada do conteúdo do usuário é persistido. O que existe:
 | orquestrador | `src/nucleo/**`, `docs/**`, configuração do projeto, README, AGENTS.md |
 | `telegram` | `app/api/telegram/**`, `src/canais/telegram/**`, `src/limite/**`, `scripts/configurar-webhook.ts`, `.env.example` |
 | `extracao-sintese` | `src/extracao/**`, `src/sintese/**`, `scripts/analisar-exemplo.ts` |
-| `sinais` | `src/sinais/**`, `dados/marcas.json`, `dados/openphish.json`, `scripts/atualizar-openphish.ts` |
+| `sinais` | `src/sinais/**`, `dados/bancos.json`, `dados/marcas.json`, `dados/openphish.json`, `scripts/atualizar-openphish.ts` |
 | `avaliacao` | `avaliacao/**` |
 | interface e experiência (equipe) | `dados/roteiros.json`, `app/page.tsx` e estilos da landing |
